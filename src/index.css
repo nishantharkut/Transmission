@@ -1,0 +1,171 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Default: Present day console */
+    --bg: 220 18% 7%;
+    --bg-raised: 220 15% 11%;
+    --text: 220 8% 92%;
+    --text-dim: 220 5% 52%;
+    --text-ghost: 220 5% 28%;
+    --accent: 142 60% 50%;
+    --accent-dim: 142 60% 50%;
+    --signal: 142 70% 65%;
+    --border-custom: 0 0% 100%;
+
+    --mono-font: 'Geist Mono', monospace;
+    --serif-font: 'Crimson Pro', serif;
+    --display-font: 'Anybody', sans-serif;
+    --ui-font: 'IBM Plex Sans', sans-serif;
+
+    --background: var(--bg);
+    --foreground: var(--text);
+    --primary: var(--accent);
+    --primary-foreground: var(--bg);
+    --secondary: var(--bg-raised);
+    --secondary-foreground: var(--text);
+    --muted: var(--bg-raised);
+    --muted-foreground: var(--text-dim);
+    --accent-color: var(--accent);
+    --accent-foreground: var(--bg);
+    --card: var(--bg-raised);
+    --card-foreground: var(--text);
+    --popover: var(--bg-raised);
+    --popover-foreground: var(--text);
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 5% 28%;
+    --input: 220 5% 28%;
+    --ring: var(--signal);
+    --radius: 0rem;
+  }
+}
+
+/* ERA OVERRIDES */
+[data-era="arpanet"] {
+  --bg: 120 100% 3%;
+  --text: 142 80% 72%;
+  --text-dim: 142 40% 40%;
+  --text-ghost: 142 30% 20%;
+  --accent: 142 90% 60%;
+  --signal: 142 90% 60%;
+}
+
+[data-era="web1"] {
+  --bg: 40 15% 94%;
+  --text: 0 0% 10%;
+  --text-dim: 0 0% 35%;
+  --text-ghost: 0 0% 60%;
+  --accent: 240 100% 50%;
+  --signal: 240 100% 50%;
+}
+
+[data-era="web2"] {
+  --bg: 215 40% 10%;
+  --text: 200 20% 90%;
+  --text-dim: 200 10% 55%;
+  --text-ghost: 200 5% 30%;
+  --accent: 200 90% 55%;
+  --signal: 200 90% 55%;
+}
+
+[data-era="mobile"] {
+  --bg: 0 0% 97%;
+  --text: 0 0% 13%;
+  --text-dim: 0 0% 45%;
+  --text-ghost: 0 0% 65%;
+  --accent: 211 100% 50%;
+  --signal: 211 100% 50%;
+}
+
+[data-era="present"] {
+  --bg: 220 18% 7%;
+  --text: 220 8% 92%;
+  --text-dim: 220 5% 52%;
+  --text-ghost: 220 5% 28%;
+  --accent: 142 60% 50%;
+  --signal: 142 70% 65%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: hsl(var(--bg));
+    color: hsl(var(--text));
+    font-family: var(--ui-font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+}
+
+/* Font utility classes */
+@layer utilities {
+  .font-mono-era {
+    font-family: var(--mono-font);
+  }
+  .font-serif-era {
+    font-family: var(--serif-font);
+  }
+  .font-display-era {
+    font-family: var(--display-font);
+  }
+  .font-ui-era {
+    font-family: var(--ui-font);
+  }
+  .text-era {
+    color: hsl(var(--text));
+  }
+  .text-era-dim {
+    color: hsl(var(--text-dim));
+  }
+  .text-era-ghost {
+    color: hsl(var(--text-ghost));
+  }
+  .text-signal {
+    color: hsl(var(--signal));
+  }
+  .text-accent-era {
+    color: hsl(var(--accent));
+  }
+  .bg-era {
+    background-color: hsl(var(--bg));
+  }
+  .bg-era-raised {
+    background-color: hsl(var(--bg-raised));
+  }
+  .border-era {
+    border-color: hsla(var(--border-custom) / 0.06);
+  }
+  .border-accent-dim {
+    border-color: hsla(var(--accent) / 0.12);
+  }
+}
+
+/* Preloader styles */
+.preloader-cursor {
+  animation: blink 0.6s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
