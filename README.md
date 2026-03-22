@@ -13,7 +13,7 @@ An interactive history of the internet, told as a 60-year signal log.
 Built for Frontend Odyssey 2026. Theme 2: Evolution of the Internet.
 Solo submission — Nishant Harkut.
 
-Live: 
+Live: https://nishantharkut.github.io/internet_evo/
 
 ---
 
@@ -60,7 +60,7 @@ The experience has seven sections forming a single narrative arc.
   ERA 3            Dot-com 2000-2011. The bubble. The crash. The recovery.
   ERA 4            Mobile 2012-2020. The phone becomes the web.
   ERA 5            Now. 5.4 billion nodes. You are one of them.
-  Close            Transmission complete.
+  Close            Transmission complete. Attribution: A history by Nishant Harkut.
 
 ---
 

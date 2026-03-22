@@ -4,15 +4,24 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TIMELINE_LINES = [
-  "1969 — 4 nodes",
-  "1983 — TCP/IP standardized",
-  "1991 — Web born, gifted freely",
-  "1995 — First online purchase",
-  "2004 — Social graphs emerge",
-  "2012 — Mobile majority",
-  "2026 — 5.4 billion connected",
-  "       ↓",
+type TimelineRow =
+  | { kind: "event"; year: string; label: string }
+  | { kind: "subnote"; text: string };
+
+const TIMELINE_ROWS: TimelineRow[] = [
+  { kind: "event", year: "1969", label: "4 nodes" },
+  { kind: "event", year: "1983", label: "TCP/IP standardized" },
+  { kind: "event", year: "1991", label: "Web born, gifted freely" },
+  { kind: "event", year: "1995", label: "First online purchase" },
+  { kind: "event", year: "2004", label: "Social graphs emerge" },
+  { kind: "event", year: "2012", label: "Mobile majority" },
+  {
+    kind: "event",
+    year: "2014",
+    label: "CHAINS, WALLETS, GAS. THE PROMISE OF OWNERSHIP.",
+  },
+  { kind: "subnote", text: "THE PROMISE REMAINS UNRESOLVED" },
+  { kind: "event", year: "__YEAR__", label: "5.4 billion connected" },
 ];
 
 interface Node {
@@ -31,8 +40,8 @@ export default function SectionNow() {
   const mouseRef = useRef({ x: -100, y: -100 });
   const animFrameRef = useRef<number>(0);
   const [showYou, setShowYou] = useState(false);
+  const presentYear = String(new Date().getFullYear());
 
-  // Counter animation
   useEffect(() => {
     const ctx = gsap.context(() => {
       const counter = { val: 0 };
@@ -51,16 +60,20 @@ export default function SectionNow() {
         },
       });
 
-      // Stagger timeline lines
-      gsap.from(".now-timeline-line", {
-        opacity: 0,
-        stagger: 0.12,
-        duration: 0.3,
+      const tl = gsap.timeline({
         scrollTrigger: { trigger: ".now-timeline", start: "top 75%" },
         onComplete: () => setTimeout(() => setShowYou(true), 800),
       });
+      const root = sectionRef.current;
+      if (root) {
+        const animEls = root.querySelectorAll(".now-timeline-anim");
+        animEls.forEach((el, i) => {
+          const isSubnote = el.classList.contains("now-timeline-subnote");
+          const pos = i === 0 ? 0 : isSubnote ? "<0.28" : "<0.08";
+          tl.from(el, { opacity: 0, duration: 0.3 }, pos);
+        });
+      }
 
-      // "You are node" text — fade in 2s after canvas enters viewport
       ScrollTrigger.create({
         trigger: canvasRef.current,
         start: "top 60%",
@@ -76,7 +89,15 @@ export default function SectionNow() {
     return () => ctx.revert();
   }, []);
 
-  // Canvas network
+  useEffect(() => {
+    if (!showYou) return;
+    gsap.fromTo(
+      ".now-timeline-you",
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" }
+    );
+  }, [showYou]);
+
   const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -233,18 +254,103 @@ export default function SectionNow() {
         </p>
       </div>
 
-      {/* Terminal recap */}
-      <div className="now-timeline mx-auto mt-12 max-w-[480px] px-4 sm:mt-16 sm:px-6">
-        {TIMELINE_LINES.map((line, i) => (
-          <div key={i} className="now-timeline-line font-mono-era text-[11px] leading-[1.9] sm:text-[13px] sm:leading-[2]" style={{ color: "hsl(220 5% 52%)" }}>
-            {line}
+      {/* Terminal recap — compact vertical timeline, centered as one unit (w-fit) */}
+      <div className="flex w-full justify-center px-4 py-8 sm:px-6 sm:py-10">
+        <div
+          className="now-timeline relative w-fit max-w-[480px]"
+          aria-label="Milestones from ARPANET to today"
+        >
+          {/* Rail — aligned to dot column; box is only as wide as content so the group centers */}
+          <div
+            className="pointer-events-none absolute bottom-2 left-3.5 top-2 z-0 w-px sm:left-4"
+            style={{
+              background:
+                "linear-gradient(180deg, hsl(142 55% 48% / 0.85) 0%, hsl(142 40% 40% / 0.35) 45%, hsl(220 12% 38% / 0.45) 100%)",
+              boxShadow: "0 0 12px hsl(142 60% 45% / 0.12)",
+            }}
+            aria-hidden
+          />
+
+          <div className="relative z-[1]">
+            {TIMELINE_ROWS.map((row, i) => {
+              if (row.kind === "subnote") {
+                return (
+                  <p
+                    key="subnote-promise"
+                    className="now-timeline-anim now-timeline-subnote font-mono-era pb-2 pl-[1.5em] text-[11px] leading-snug sm:text-[12px] sm:leading-normal"
+                    style={{ color: "hsl(44 96% 56%)", fontWeight: 500 }}
+                  >
+                    {row.text}
+                  </p>
+                );
+              }
+              const year = row.year === "__YEAR__" ? presentYear : row.year;
+              return (
+                <div
+                  key={`${year}-${row.label}-${i}`}
+                  className="now-timeline-line now-timeline-anim flex items-start gap-2.5 pb-2 sm:gap-3 sm:pb-2.5"
+                >
+                  <div className="flex w-7 shrink-0 flex-col items-center sm:w-8">
+                    <span
+                      className="mt-1 h-2 w-2 shrink-0 rounded-full sm:h-2.5 sm:w-2.5"
+                      style={{
+                        background: "hsl(142 65% 52%)",
+                        boxShadow:
+                          "0 0 0 2px hsl(220 18% 7%), 0 0 10px hsl(142 70% 50% / 0.35)",
+                      }}
+                    />
+                  </div>
+                  <p className="min-w-0 max-w-[56ch] pt-0.5 text-left font-mono-era text-[11px] font-normal leading-snug sm:text-[12px] sm:leading-normal">
+                    <span
+                      className="font-semibold tabular-nums tracking-wide"
+                      style={{ color: "hsl(142 72% 58%)" }}
+                    >
+                      {year}
+                    </span>
+                    <span style={{ color: "hsl(220 8% 45%)" }}> — </span>
+                    <span style={{ color: "hsl(220 8% 62%)" }}>{row.label}</span>
+                  </p>
+                </div>
+              );
+            })}
+
+            <div className="now-timeline-line now-timeline-anim flex items-start gap-2.5 pb-1 pt-0.5 sm:gap-3">
+              <div className="flex w-7 shrink-0 justify-center sm:w-8">
+                <span
+                  className="font-mono-era text-[13px] leading-none sm:text-base"
+                  style={{ color: "hsl(220 12% 48%)" }}
+                  aria-hidden
+                >
+                  ↓
+                </span>
+              </div>
+              <div className="font-mono-era text-[9px] uppercase tracking-[0.18em] sm:text-[10px]" style={{ color: "hsl(220 10% 42%)" }}>
+                You are here
+              </div>
+            </div>
+
+            {showYou && (
+              <div className="now-timeline-you flex items-center gap-2.5 opacity-0 sm:gap-3">
+                <div className="flex w-7 shrink-0 justify-center sm:w-8">
+                  <span
+                    className="h-3 w-3 shrink-0 rounded-full sm:h-3.5 sm:w-3.5"
+                    style={{
+                      background: "hsl(142 78% 58%)",
+                      boxShadow:
+                        "0 0 0 2px hsl(220 18% 7%), 0 0 16px hsl(142 85% 55% / 0.55)",
+                    }}
+                  />
+                </div>
+                <div
+                  className="font-mono-era text-[20px] font-bold leading-none tracking-tight sm:text-[24px]"
+                  style={{ color: "hsl(142 78% 62%)" }}
+                >
+                  YOU
+                </div>
+              </div>
+            )}
           </div>
-        ))}
-        {showYou && (
-          <div className="mt-1 font-mono-era text-[16px] font-semibold sm:text-[20px]" style={{ color: "hsl(142 70% 65%)" }}>
-            YOU
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Canvas network */}

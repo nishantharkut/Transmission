@@ -54,8 +54,8 @@ export default function SectionClosing() {
           style={{ width: 64, height: 1, backgroundColor: "hsl(142 70% 65%)" }}
         />
 
-        <div className="font-ui-era text-[13px]" style={{ color: "hsl(220 5% 28%)" }}>
-          A history by Frontend Odyssey
+        <div className="font-ui-era text-[13px] font-normal text-era-ghost">
+          A history by Nishant Harkut
         </div>
       </div>
 

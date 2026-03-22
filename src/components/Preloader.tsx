@@ -2,10 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 const LINES = [
+  "MS-DOS ARPANET Link [v4.10.92]",
+  "Copyright (C) 1969 UCLA / SRI. All rights reserved.",
+  "",
+  "C:\\TRANSMISSION> ARPANET.EXE /INIT",
+  "",
   "ARPANET TERMINAL v1.0",
   "INITIALIZING PACKET SWITCH NETWORK...",
   "NODE: UCLA → SRI",
-  'TRANSMITTING: "LO"',
+  "TRANSMITTING: \"LO\"",
   "",
   "[CONNECTION LOST]",
   "",
@@ -15,7 +20,7 @@ const LINES = [
   "LOADING 57 YEARS OF HISTORY",
 ];
 
-const PROGRESS_CHARS = 18;
+const PROGRESS_CHARS = 16;
 
 interface PreloaderProps {
   onComplete: () => void;
@@ -32,13 +37,16 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     let lineIdx = 0;
     const interval = setInterval(() => {
       if (lineIdx < LINES.length) {
-        setLines((prev) => [...prev, LINES[lineIdx]]);
+        const next = LINES[lineIdx];
+        if (next !== undefined) {
+          setLines((prev) => [...prev, next]);
+        }
         lineIdx++;
       } else {
         clearInterval(interval);
         setPhase("progress");
       }
-    }, 300);
+    }, 260);
     return () => clearInterval(interval);
   }, []);
 
@@ -47,7 +55,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     let charIdx = 0;
     const interval = setInterval(() => {
       if (charIdx <= PROGRESS_CHARS) {
-        setProgress("█".repeat(charIdx) + "░".repeat(PROGRESS_CHARS - charIdx) + ` ${Math.round((charIdx / PROGRESS_CHARS) * 100)}%`);
+        const filled = "█".repeat(charIdx);
+        const empty = "░".repeat(PROGRESS_CHARS - charIdx);
+        const pct = Math.round((charIdx / PROGRESS_CHARS) * 100);
+        setProgress(`[${filled}${empty}] ${pct}%`);
         charIdx++;
       } else {
         clearInterval(interval);
@@ -56,7 +67,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           setPhase("waiting");
         }, 400);
       }
-    }, 20);
+    }, 22);
     return () => clearInterval(interval);
   }, [phase]);
 
@@ -65,7 +76,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     const handler = () => {
       gsap.to(containerRef.current, {
         opacity: 0,
-        duration: 0.4,
+        duration: 0.45,
         onComplete,
       });
     };
@@ -78,22 +89,64 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   }, [phase, onComplete]);
 
   return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 z-[200] flex items-center justify-center"
-      style={{ backgroundColor: "hsl(220 18% 7%)" }}
-    >
-      <div className="font-mono-era max-w-[min(100vw-2rem,480px)] px-4 text-[11px] leading-[1.85] text-signal sm:px-6 sm:text-[13px] sm:leading-[2]">
-        {lines.map((line, i) => (
-          <div key={i}>{line || "\u00A0"}</div>
-        ))}
-        {phase !== "typing" && <div>{progress}</div>}
-        {showPrompt && (
-          <div className="mt-4">
-            PRESS ANY KEY TO BEGIN TRANSMISSION
-            <span className="preloader-cursor">_</span>
+    <div ref={containerRef} className="preloader-crt-root fixed inset-0 z-[200] flex items-center justify-center">
+      <div className="preloader-crt-monitor flex min-w-0 flex-col">
+        {/* Plastic CRT bezel + window chrome */}
+        <div className="preloader-crt-bezel">
+          <div className="preloader-crt-titlebar" role="presentation">
+            <div className="preloader-crt-titlebar-dots" aria-hidden>
+              <span style={{ background: "#c0c0c0" }} />
+              <span style={{ background: "#808080" }} />
+            </div>
+            <span className="preloader-crt-titlebar-title">ARPANET.EXE — MS-DOS</span>
+            <div className="preloader-crt-titlebar-dots" aria-hidden>
+              <span className="h-[9px] w-[11px]" style={{ background: "#c0c0c0" }} />
+            </div>
           </div>
-        )}
+
+          <div className="preloader-crt-screen">
+            <div className="preloader-crt-scanlines" aria-hidden />
+            <div className="preloader-crt-flicker" aria-hidden />
+            <div className="preloader-crt-vignette" aria-hidden />
+
+            <div className="preloader-crt-body">
+              <div className="preloader-crt-log" role="log" aria-live="polite" aria-label="Boot sequence">
+                {lines.map((line, i) => {
+                  const text = line ?? "";
+                  const isWarn = text.includes("[CONNECTION LOST]");
+                  const isDim =
+                    text.startsWith("Copyright") ||
+                    text.startsWith("C:\\") ||
+                    text === "MS-DOS ARPANET Link [v4.10.92]";
+                  return (
+                    <p
+                      key={i}
+                      className={`preloader-crt-line ${isWarn ? "preloader-crt-warn" : isDim ? "preloader-crt-dim" : ""}`}
+                    >
+                      {text || " "}
+                    </p>
+                  );
+                })}
+                {phase !== "typing" && (
+                  <p className="preloader-crt-line preloader-crt-progress-row">{progress}</p>
+                )}
+                {showPrompt && (
+                  <div className="preloader-crt-prompt">
+                    <span className="preloader-crt-prompt-k">
+                      PRESS ANY KEY OR TAP TO BEGIN TRANSMISSION
+                      <span className="preloader-crt-block-cursor" aria-hidden />
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="preloader-crt-status">
+                <span>SCR: 80×25 · F1 HELP</span>
+                <span>INSERT: ON · CAPS: OFF</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

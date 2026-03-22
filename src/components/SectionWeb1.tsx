@@ -24,11 +24,9 @@ export default function SectionWeb1() {
         },
       });
 
-      // A → B
       tl.to(stateARef.current, { opacity: 0, duration: 0.3 }, 0.3);
       tl.fromTo(stateBRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.33);
 
-      // B → C
       tl.to(stateBRef.current, { opacity: 0, duration: 0.3 }, 0.63);
       tl.fromTo(stateCRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.66);
     }, sectionRef);
