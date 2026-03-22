@@ -24,7 +24,7 @@ export default function SectionClosing() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 px-6"
+      className="px-4 py-16 sm:px-6 sm:py-24"
       style={{ backgroundColor: "hsl(220 18% 7%)" }}
     >
       <div className="closing-content max-w-[600px] mx-auto text-center">

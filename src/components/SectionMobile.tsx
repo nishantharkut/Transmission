@@ -39,9 +39,10 @@ export default function SectionMobile() {
         scrollTrigger: {
           trigger: pinnedRef.current,
           start: "top top",
-          end: "+=150%",
+          end: () => (window.innerWidth < 768 ? "+=120%" : "+=150%"),
           pin: true,
           scrub: 1,
+          invalidateOnRefresh: true,
           onUpdate: (self) => {
             const progress = self.progress;
             const cards = Math.min(FEED_ITEMS.length, Math.floor(2 + progress * (FEED_ITEMS.length - 1)));
@@ -50,7 +51,7 @@ export default function SectionMobile() {
         },
       });
 
-      tl.from(phoneRef.current, { x: 140, opacity: 0, duration: 0.5 });
+      tl.from(phoneRef.current, { x: 56, opacity: 0, duration: 0.5 });
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -81,10 +82,10 @@ export default function SectionMobile() {
     <section ref={sectionRef} data-era="mobile">
       <div
         ref={pinnedRef}
-        className="min-h-screen relative flex items-center"
+        className="relative flex min-h-dvh items-center"
         style={{ backgroundColor: "hsl(0 0% 97%)" }}
       >
-        <div className="max-w-[1080px] mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div className="mx-auto grid w-full max-w-[1080px] grid-cols-1 items-center gap-10 px-4 py-8 md:grid-cols-2 md:gap-16 md:py-0 sm:px-6">
           {/* Left text */}
           <div>
             <div className="font-mono-era text-[10px] mb-4" style={{ color: "hsl(0 0% 60%)", letterSpacing: "2px" }}>
@@ -99,7 +100,7 @@ export default function SectionMobile() {
             <p className="font-ui-era text-[15px] max-w-[420px] leading-[1.7]" style={{ color: "hsl(0 0% 45%)" }}>
               By 2020, the average person touched their phone 2,617 times a day. The internet had stopped being a place you visited.
             </p>
-            <div className="mt-8 flex gap-12">
+            <div className="mt-6 flex flex-wrap gap-8 sm:mt-8 sm:gap-12">
               <div>
                 <div className="font-mono-era font-bold text-[28px]" style={{ color: "hsl(0 0% 13%)" }}>2,617</div>
                 <div className="font-ui-era text-[11px] mt-1" style={{ color: "hsl(0 0% 55%)" }}>daily touches</div>
@@ -115,10 +116,12 @@ export default function SectionMobile() {
           <div className="flex justify-center">
             <div
               ref={phoneRef}
-              className="relative cursor-pointer"
+              className="relative w-full max-w-[260px] cursor-pointer touch-manipulation"
               onMouseEnter={() => setShowBadges(true)}
               onMouseLeave={() => setShowBadges(false)}
-              style={{ width: 260 }}
+              onClick={() => {
+                if (window.matchMedia("(hover: none)").matches) setShowBadges((v) => !v);
+              }}
             >
               {/* Phone frame SVG — refined proportions */}
               <svg viewBox="0 0 260 540" fill="none" className="w-full" aria-label="Phone wireframe showing mobile apps. Hover to see notifications.">

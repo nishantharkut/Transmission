@@ -181,16 +181,30 @@ export default function SectionNow() {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     };
+    const handleTouch = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (!t) return;
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: t.clientX - rect.left, y: t.clientY - rect.top };
+    };
     const handleLeave = () => {
       mouseRef.current = { x: -100, y: -100 };
     };
     canvas.addEventListener("mousemove", handleMove);
     canvas.addEventListener("mouseleave", handleLeave);
+    canvas.addEventListener("touchstart", handleTouch, { passive: true });
+    canvas.addEventListener("touchmove", handleTouch, { passive: true });
+    canvas.addEventListener("touchend", handleLeave);
+    canvas.addEventListener("touchcancel", handleLeave);
 
     return () => {
       cancelAnimationFrame(animFrameRef.current);
       canvas.removeEventListener("mousemove", handleMove);
       canvas.removeEventListener("mouseleave", handleLeave);
+      canvas.removeEventListener("touchstart", handleTouch);
+      canvas.removeEventListener("touchmove", handleTouch);
+      canvas.removeEventListener("touchend", handleLeave);
+      canvas.removeEventListener("touchcancel", handleLeave);
       observer.disconnect();
     };
   }, [initCanvas]);
@@ -199,53 +213,52 @@ export default function SectionNow() {
     <section
       ref={sectionRef}
       data-era="present"
-      className="py-[120px]"
+      className="py-16 md:py-[120px]"
       style={{ backgroundColor: "hsl(220 18% 7%)" }}
     >
       {/* Counter */}
-      <div className="min-h-[60vh] flex flex-col items-center justify-center px-6">
+      <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 sm:min-h-[60vh] sm:px-6">
         <div
           ref={counterRef}
-          className="font-mono-era font-bold text-[48px] md:text-[96px] text-signal"
+          className="font-mono-era text-[34px] font-bold tabular-nums text-signal sm:text-[52px] md:text-[80px] lg:text-[96px]"
           style={{ color: "hsl(142 70% 65%)" }}
         >
           0
         </div>
-        <p className="font-ui-era font-light text-[18px] mt-2" style={{ color: "hsl(220 5% 52%)" }}>
+        <p className="mt-2 text-center font-ui-era text-[15px] font-light sm:text-[18px]" style={{ color: "hsl(220 5% 52%)" }}>
           People on the internet right now.
         </p>
-        <p className="font-serif-era italic font-semibold text-[22px] mt-6 max-w-[520px] text-center leading-[1.4]" style={{ color: "hsl(220 8% 92%)" }}>
+        <p className="mt-6 max-w-[min(100%,520px)] text-center font-serif-era text-[18px] font-semibold italic leading-[1.4] sm:text-[20px] md:text-[22px]" style={{ color: "hsl(220 8% 92%)" }}>
           All of them reached here through a message that lost its third letter in 1969.
         </p>
       </div>
 
       {/* Terminal recap */}
-      <div className="now-timeline max-w-[480px] mx-auto px-6 mt-16">
+      <div className="now-timeline mx-auto mt-12 max-w-[480px] px-4 sm:mt-16 sm:px-6">
         {TIMELINE_LINES.map((line, i) => (
-          <div key={i} className="now-timeline-line font-mono-era text-[13px] leading-[2]" style={{ color: "hsl(220 5% 52%)" }}>
+          <div key={i} className="now-timeline-line font-mono-era text-[11px] leading-[1.9] sm:text-[13px] sm:leading-[2]" style={{ color: "hsl(220 5% 52%)" }}>
             {line}
           </div>
         ))}
         {showYou && (
-          <div className="font-mono-era text-[20px] font-semibold mt-1" style={{ color: "hsl(142 70% 65%)" }}>
+          <div className="mt-1 font-mono-era text-[16px] font-semibold sm:text-[20px]" style={{ color: "hsl(142 70% 65%)" }}>
             YOU
           </div>
         )}
       </div>
 
       {/* Canvas network */}
-      <div className="mt-20 px-6">
+      <div className="mt-12 px-4 sm:mt-20 sm:px-6">
         <canvas
           ref={canvasRef}
-          className="w-full"
-          style={{ height: "60vh" }}
-          aria-label="Interactive network visualization. Move your cursor to become a node in the network."
+          className="h-[min(42vh,260px)] w-full touch-none sm:h-[min(48vh,340px)] md:h-[60vh]"
+          aria-label="Interactive network visualization. Move your finger or cursor to become a node in the network."
           role="img"
         />
         <div className="text-center mt-6">
           <span
             ref={nodeTextRef}
-            className="font-mono-era font-semibold text-[18px]"
+            className="font-mono-era text-[14px] font-semibold sm:text-[18px]"
             style={{ color: "hsl(142 70% 65%)", opacity: 0 }}
           >
             You are node #5,400,000,001

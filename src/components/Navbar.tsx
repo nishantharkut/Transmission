@@ -40,7 +40,7 @@ export default function Navbar({ scrollProgress }: NavbarProps) {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 h-12 z-[100] flex items-center justify-between px-6"
+      className="fixed top-0 left-0 right-0 z-[100] flex min-h-12 items-center justify-between gap-2 px-4 pt-[env(safe-area-inset-top,0px)] sm:px-6"
       style={{
         background: "hsla(220, 18%, 7%, 0.82)",
         backdropFilter: "blur(12px)",
@@ -48,7 +48,7 @@ export default function Navbar({ scrollProgress }: NavbarProps) {
       }}
     >
       <span
-        className="font-display-era font-bold text-[13px] text-signal"
+        className="font-display-era shrink-0 font-bold text-[11px] text-signal sm:text-[13px]"
         style={{ fontStretch: "125%", letterSpacing: "0.08em" }}
       >
         TRANSMISSION

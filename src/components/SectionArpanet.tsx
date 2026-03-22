@@ -43,23 +43,23 @@ export default function SectionArpanet() {
     <section
       ref={sectionRef}
       data-era="arpanet"
-      className="py-[120px] px-6 max-w-[1080px] mx-auto"
+      className="mx-auto max-w-[1080px] px-4 py-16 sm:px-6 md:py-[120px]"
       style={{ backgroundColor: "hsl(120 100% 3%)" }}
     >
       {/* Narrative hook */}
       <h2
-        className="font-serif-era font-bold text-[32px] md:text-[52px] leading-[1.1] max-w-[640px] mb-16"
+        className="font-serif-era mb-10 max-w-[640px] text-[26px] font-bold leading-[1.12] sm:mb-16 sm:text-[30px] md:text-[52px]"
         style={{ color: "hsl(142 80% 72%)", lineHeight: 1.1 }}
       >
         The first engineers built a network that could survive a nuclear strike. They had no idea it would survive everything else instead.
       </h2>
 
       {/* Two-column layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-16">
         {/* Left: Transmission feed */}
-        <div className="arpanet-left arpanet-feed border p-6" style={{ borderColor: "hsla(142, 90%, 60%, 0.12)" }}>
+        <div className="arpanet-left arpanet-feed border p-4 sm:p-6" style={{ borderColor: "hsla(142, 90%, 60%, 0.12)" }}>
           {EVENTS.map((evt, i) => (
-            <div key={i} className="arpanet-event font-mono-era text-[12px] leading-[2]">
+            <div key={i} className="arpanet-event font-mono-era text-[11px] leading-[1.85] sm:text-[12px] sm:leading-[2]">
               <span style={{ color: "hsl(142 40% 40%)" }}>{evt.date}  </span>
               <span style={{ color: "hsl(142 80% 72%)" }}>{evt.text}</span>
             </div>
@@ -76,7 +76,7 @@ export default function SectionArpanet() {
               style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
             >
               <div
-                className="font-display-era font-extrabold text-[64px] leading-none"
+                className="font-display-era text-[48px] font-extrabold leading-none sm:text-[56px] md:text-[64px]"
                 style={{ color: "hsl(142 90% 60%)", fontStretch: stat.stretch }}
               >
                 {stat.num}

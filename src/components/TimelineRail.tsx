@@ -64,16 +64,24 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
         </div>
       </div>
 
-      {/* Mobile progress bar */}
-      <div className="fixed bottom-0 left-0 right-0 h-[2px] z-50 md:hidden" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
-        <div
-          className="h-full"
-          style={{
-            backgroundColor: "hsl(142 70% 65%)",
-            width: `${scrollProgress * 100}%`,
-            transition: "width 0.1s linear",
-          }}
-        />
+      {/* Mobile progress bar — sits above home indicator */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
+        style={{
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+          backgroundColor: "rgba(255,255,255,0.06)",
+        }}
+      >
+        <div className="h-[3px] w-full">
+          <div
+            className="h-full"
+            style={{
+              backgroundColor: "hsl(142 70% 65%)",
+              width: `${scrollProgress * 100}%`,
+              transition: "width 0.1s linear",
+            }}
+          />
+        </div>
       </div>
     </>
   );

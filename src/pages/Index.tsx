@@ -150,6 +150,8 @@ export default function Index() {
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      // Let native touch scrolling drive the page on phones (better feel + fewer pin glitches)
+      touchMultiplier: window.matchMedia("(max-width: 767px)").matches ? 1.5 : 1,
     });
     lenisRef.current = lenis;
 
@@ -197,7 +199,13 @@ export default function Index() {
       });
     });
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+    const onResize = () => ScrollTrigger.refresh();
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
   }, [loaded]);
 
   if (!loaded) {

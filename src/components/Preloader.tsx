@@ -83,7 +83,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       className="fixed inset-0 z-[200] flex items-center justify-center"
       style={{ backgroundColor: "hsl(220 18% 7%)" }}
     >
-      <div className="font-mono-era text-[13px] leading-[2] text-signal max-w-[480px] px-6">
+      <div className="font-mono-era max-w-[min(100vw-2rem,480px)] px-4 text-[11px] leading-[1.85] text-signal sm:px-6 sm:text-[13px] sm:leading-[2]">
         {lines.map((line, i) => (
           <div key={i}>{line || "\u00A0"}</div>
         ))}

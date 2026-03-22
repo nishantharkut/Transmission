@@ -58,7 +58,7 @@ export default function SectionDotCom() {
     <section
       ref={sectionRef}
       data-era="web2"
-      className="relative py-[120px] px-6 overflow-hidden"
+      className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-[120px]"
       style={{ backgroundColor: "hsl(215 40% 10%)" }}
     >
       {/* Marquee */}
@@ -70,24 +70,24 @@ export default function SectionDotCom() {
         </div>
       </div>
 
-      <div className="max-w-[720px] mx-auto relative z-10">
+      <div className="relative z-10 mx-auto max-w-[720px]">
         {/* Pull quote */}
         <h2
-          className="dotcom-quote font-serif-era font-bold italic text-[28px] md:text-[48px] leading-[1.15] text-center mb-16"
+          className="dotcom-quote mb-10 text-center font-serif-era text-[22px] font-bold italic leading-[1.15] sm:mb-16 sm:text-[26px] md:text-[48px]"
           style={{ color: "hsl(200 20% 90%)" }}
         >
           $1.7 trillion in market value disappeared in 18 months. Then social media arrived, and everyone forgot.
         </h2>
 
         {/* Bubble Meter */}
-        <div className="mb-16">
+        <div className="mb-10 sm:mb-16">
           <div className="flex justify-between font-mono-era text-[11px] mb-2" style={{ color: "hsl(200 10% 55%)" }}>
             <span>NASDAQ 1999</span>
             <span>MARCH 2000 CRASH</span>
           </div>
 
           {/* SVG Chart */}
-          <svg viewBox="0 0 300 120" className="w-full h-[120px] mb-4" aria-label="NASDAQ bubble chart">
+          <svg viewBox="0 0 300 120" className="mb-4 h-[100px] w-full sm:h-[120px]" aria-label="NASDAQ bubble chart">
             <path d={pathD} fill="none" stroke="hsl(200 90% 55%)" strokeWidth="2" />
             {visiblePoints.length > 0 && (
               <circle
@@ -117,7 +117,7 @@ export default function SectionDotCom() {
 
           {/* NASDAQ Counter */}
           <div className="text-center mt-4">
-            <span className="font-mono-era font-bold text-[36px]" style={{ color: "hsl(200 90% 55%)" }}>
+            <span className="font-mono-era text-[28px] font-bold tabular-nums sm:text-[32px] md:text-[36px]" style={{ color: "hsl(200 90% 55%)" }}>
               {Math.round(nasdaqValue).toLocaleString()}
             </span>
             <div className="font-ui-era text-[12px] mt-1" style={{ color: "hsl(200 10% 55%)" }}>

@@ -17,9 +17,10 @@ export default function SectionWeb1() {
         scrollTrigger: {
           trigger: pinnedRef.current,
           start: "top top",
-          end: "+=300%",
+          end: () => (window.innerWidth < 768 ? "+=190%" : "+=300%"),
           pin: true,
           scrub: 1,
+          invalidateOnRefresh: true,
         },
       });
 
@@ -38,16 +39,16 @@ export default function SectionWeb1() {
     <section ref={sectionRef} data-era="web1">
       <div
         ref={pinnedRef}
-        className="min-h-screen relative overflow-hidden"
+        className="relative min-h-dvh overflow-hidden"
         style={{ backgroundColor: "hsl(40 15% 94%)" }}
       >
         {/* Narrative label — positioned below navbar with solid background for legibility */}
         <div
-          className="absolute z-10 px-6 md:px-10"
-          style={{ top: 72, left: 0, maxWidth: 460 }}
+          className="absolute left-0 z-10 max-w-[min(100vw-2rem,460px)] px-4 sm:px-6 md:px-10"
+          style={{ top: "calc(4.5rem + env(safe-area-inset-top, 0px))" }}
         >
           <p
-            className="font-serif-era italic font-light text-[20px] md:text-[22px] leading-[1.5]"
+            className="font-serif-era text-[17px] font-light italic leading-[1.45] sm:text-[19px] md:text-[22px] md:leading-[1.5]"
             style={{ color: "hsl(0 0% 20%)" }}
           >
             In 1991, a scientist gave away the web for free. No patent. No royalties. Just the gift.
@@ -55,16 +56,16 @@ export default function SectionWeb1() {
         </div>
 
         {/* Era year indicator — bottom left */}
-        <div className="absolute bottom-8 left-8 z-10">
-          <span className="font-mono-era text-[10px]" style={{ color: "hsl(0 0% 60%)", letterSpacing: "2px" }}>
+        <div className="absolute bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 z-10 sm:bottom-8 sm:left-8">
+          <span className="font-mono-era text-[8px] sm:text-[10px]" style={{ color: "hsl(0 0% 60%)", letterSpacing: "2px" }}>
             ERA 02 · THE WORLD WIDE WEB
           </span>
         </div>
 
         {/* Sub-state A: 1991 first website — actual recreation */}
-        <div ref={stateARef} className="absolute inset-0 flex items-center justify-center px-6 pt-24 pb-12">
+        <div ref={stateARef} className="absolute inset-0 flex items-center justify-center px-3 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24">
           <div
-            className="w-full max-w-[660px] p-8 md:p-12"
+            className="w-full max-w-[660px] p-4 sm:p-8 md:p-12"
             style={{
               backgroundColor: "hsl(0 0% 96%)",
               border: "1px solid hsl(0 0% 82%)",
@@ -73,10 +74,10 @@ export default function SectionWeb1() {
             }}
           >
             <div className="mb-6 pb-4" style={{ borderBottom: "1px solid hsl(0 0% 80%)" }}>
-              <h1 className="text-[22px] md:text-[28px] font-bold leading-tight">
+              <h1 className="text-[18px] font-bold leading-tight sm:text-[22px] md:text-[28px]">
                 WorldWideWeb — Executive Summary
               </h1>
-              <div className="mt-2 text-[12px]" style={{ color: "hsl(0 0% 55%)" }}>
+              <div className="mt-2 break-all text-[10px] sm:text-[12px]" style={{ color: "hsl(0 0% 55%)" }}>
                 http://info.cern.ch/hypertext/WWW/TheProject.html
               </div>
             </div>
@@ -143,8 +144,8 @@ export default function SectionWeb1() {
         </div>
 
         {/* Sub-state B: Netscape era ~1994 */}
-        <div ref={stateBRef} className="absolute inset-0 flex items-center justify-center px-6 pt-24 pb-12" style={{ opacity: 0 }}>
-          <div className="w-full max-w-[700px]">
+        <div ref={stateBRef} className="absolute inset-0 flex items-center justify-center px-2 pb-8 pt-20 sm:px-6 sm:pb-12 sm:pt-24" style={{ opacity: 0 }}>
+          <div className="w-full max-w-[700px] min-w-0">
             {/* Window chrome */}
             <div
               className="px-3 py-2 flex items-center gap-2"
@@ -160,54 +161,54 @@ export default function SectionWeb1() {
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "hsl(45 60% 55%)", border: "1px solid hsl(45 60% 40%)" }} />
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "hsl(120 50% 42%)", border: "1px solid hsl(120 50% 32%)" }} />
               </div>
-              <span className="font-ui-era text-[11px] ml-2 font-medium" style={{ color: "hsl(0 0% 20%)" }}>
+              <span className="ml-1 min-w-0 truncate font-ui-era text-[9px] font-medium sm:ml-2 sm:text-[11px]" style={{ color: "hsl(0 0% 20%)" }}>
                 Netscape Navigator — [Welcome to Netscape]
               </span>
             </div>
 
             {/* Toolbar */}
             <div
-              className="px-3 py-1.5 flex items-center gap-3"
+              className="flex flex-wrap items-center gap-x-2 gap-y-1 px-2 py-1.5 sm:gap-x-3 sm:px-3"
               style={{
                 backgroundColor: "hsl(220 10% 82%)",
                 borderBottom: "1px solid hsl(220 10% 70%)",
               }}
             >
               {["Back", "Forward", "Home", "Reload", "Images", "Print", "Find", "Stop"].map((btn) => (
-                <span key={btn} className="text-[9px] font-ui-era" style={{ color: "hsl(0 0% 30%)" }}>{btn}</span>
+                <span key={btn} className="whitespace-nowrap font-ui-era text-[8px] sm:text-[9px]" style={{ color: "hsl(0 0% 30%)" }}>{btn}</span>
               ))}
             </div>
 
             {/* Location bar */}
             <div
-              className="px-3 py-1.5 flex items-center gap-2"
+              className="flex min-w-0 items-center gap-2 px-2 py-1.5 sm:px-3"
               style={{
                 backgroundColor: "hsl(220 10% 82%)",
                 borderBottom: "2px solid hsl(220 10% 65%)",
               }}
             >
-              <span className="text-[10px] font-ui-era font-medium" style={{ color: "hsl(0 0% 30%)" }}>Location:</span>
-              <div className="flex-1 px-2 py-0.5" style={{ backgroundColor: "hsl(0 0% 100%)", border: "1px inset hsl(220 10% 70%)" }}>
-                <span className="text-[10px] font-mono-era" style={{ color: "hsl(0 0% 20%)" }}>http://home.netscape.com/</span>
+              <span className="shrink-0 font-ui-era text-[9px] font-medium sm:text-[10px]" style={{ color: "hsl(0 0% 30%)" }}>Location:</span>
+              <div className="min-w-0 flex-1 px-2 py-0.5" style={{ backgroundColor: "hsl(0 0% 100%)", border: "1px inset hsl(220 10% 70%)" }}>
+                <span className="block truncate font-mono-era text-[8px] sm:text-[10px]" style={{ color: "hsl(0 0% 20%)" }}>http://home.netscape.com/</span>
               </div>
             </div>
 
             {/* Content area */}
             <div
-              className="p-6"
+              className="p-3 sm:p-6"
               style={{
                 backgroundColor: "hsl(220 8% 88%)",
                 backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23bbb'/%3E%3C/svg%3E\")",
                 backgroundRepeat: "repeat",
                 borderBottomLeftRadius: 4,
                 borderBottomRightRadius: 4,
-                minHeight: 300,
+                minHeight: 240,
               }}
             >
-              <table className="w-full" style={{ fontFamily: "'Times New Roman', serif", fontSize: "14px", color: "hsl(0 0% 12%)" }}>
-                <tbody>
-                  <tr>
-                    <td className="align-top pr-5 pb-4" style={{ width: "35%", borderRight: "2px groove hsl(220 10% 75%)" }}>
+              <table className="block w-full md:table" style={{ fontFamily: "'Times New Roman', serif", fontSize: "14px", color: "hsl(0 0% 12%)" }}>
+                <tbody className="block md:table-row-group">
+                  <tr className="flex flex-col gap-4 md:table-row md:gap-0">
+                    <td className="block w-full pb-0 align-top md:table-cell md:w-[35%] md:pb-4 md:pr-5 md:[border-right:2px_groove_hsl(220,10%,75%)]">
                       <div className="font-bold mb-3 text-[15px]">Navigation</div>
                       {["What's New", "What's Cool", "Handbook", "Net Search", "Net Directory", "Software"].map((link) => (
                         <div key={link} className="mb-1">
@@ -230,7 +231,7 @@ export default function SectionWeb1() {
                         </div>
                       </div>
                     </td>
-                    <td className="align-top pl-5 pb-4">
+                    <td className="block w-full align-top pb-4 pl-0 pt-0 md:table-cell md:pl-5 md:pt-0">
                       <div className="font-bold mb-2 text-[16px]">WELCOME TO NETSCAPE</div>
                       <p className="text-[13px] leading-[1.7] mb-3" style={{ color: "hsl(0 0% 20%)" }}>
                         You have just embarked on a journey through the information superhighway. Netscape Navigator lets you explore the Internet with ease.
@@ -270,11 +271,11 @@ export default function SectionWeb1() {
                 </tbody>
               </table>
 
-              <div className="text-right mt-2">
-                <span style={{ fontFamily: "'Comic Sans MS', cursive", fontSize: "9px", color: "hsl(0 0% 50%)" }}>
+              <div className="mt-2 flex flex-col items-end gap-1 text-right sm:flex-row sm:items-baseline sm:justify-end sm:gap-0">
+                <span className="max-w-full break-words text-right" style={{ fontFamily: "'Comic Sans MS', cursive", fontSize: "9px", color: "hsl(0 0% 50%)" }}>
                   best viewed at 800×600 · 256 colors
                 </span>
-                <span className="font-mono-era text-[11px] ml-3 font-medium" style={{ color: "hsl(0 0% 40%)" }}>
+                <span className="font-mono-era text-[11px] font-medium sm:ml-3" style={{ color: "hsl(0 0% 40%)" }}>
                   1994
                 </span>
               </div>
@@ -283,9 +284,9 @@ export default function SectionWeb1() {
         </div>
 
         {/* Sub-state C: 1999 portal era */}
-        <div ref={stateCRef} className="absolute inset-0 flex items-center justify-center px-6 pt-24 pb-12" style={{ opacity: 0 }}>
+        <div ref={stateCRef} className="absolute inset-0 flex items-center justify-center px-3 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24" style={{ opacity: 0 }}>
           <div
-            className="w-full max-w-[680px] p-8"
+            className="w-full max-w-[680px] min-w-0 p-4 sm:p-8"
             style={{
               backgroundColor: "hsl(215 50% 12%)",
               border: "1px solid hsl(200 40% 25%)",
@@ -296,7 +297,7 @@ export default function SectionWeb1() {
             {/* Portal header */}
             <div className="text-center mb-8">
               <h2
-                className="font-display-era font-bold text-[32px] md:text-[36px]"
+                className="font-display-era text-[26px] font-bold sm:text-[30px] md:text-[36px]"
                 style={{
                   color: "hsl(45 90% 58%)",
                   fontStretch: "115%",
@@ -311,7 +312,7 @@ export default function SectionWeb1() {
               </div>
 
               {/* Search bar */}
-              <div className="flex items-center gap-2 mt-4 max-w-[400px] mx-auto">
+              <div className="mx-auto mt-4 flex max-w-[400px] min-w-0 items-center gap-2 px-1">
                 <div
                   className="flex-1 h-8 px-3 flex items-center"
                   style={{

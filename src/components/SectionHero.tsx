@@ -47,12 +47,12 @@ export default function SectionHero() {
     <section
       ref={sectionRef}
       data-era="arpanet"
-      className="relative min-h-screen flex flex-col items-center justify-center px-6"
+      className="relative flex min-h-dvh flex-col items-center justify-center px-4 sm:px-6"
       style={{ backgroundColor: "hsl(120 100% 3%)" }}
     >
       {/* ASCII network background */}
       <pre
-        className="absolute inset-0 font-mono-era text-[10px] leading-[1.8] pointer-events-none select-none overflow-hidden"
+        className="absolute inset-0 font-mono-era text-[7px] leading-[1.7] pointer-events-none select-none overflow-hidden sm:text-[9px] md:text-[10px] md:leading-[1.8]"
         style={{ color: "hsl(142 80% 72%)", opacity: 0.06 }}
         aria-hidden="true"
       >
@@ -68,7 +68,7 @@ export default function SectionHero() {
       </pre>
 
       {/* Transmission log */}
-      <div className="font-mono-era text-[13px] leading-[2] text-center max-w-[480px] relative z-10" style={{ color: "hsl(142 80% 72%)" }}>
+      <div className="font-mono-era text-[11px] leading-[1.85] text-center max-w-[min(100%,480px)] relative z-10 sm:text-[12px] sm:leading-[2] md:text-[13px]" style={{ color: "hsl(142 80% 72%)" }}>
         <div className="hero-log-line">TRANSMISSION LOG</div>
         <div className="hero-log-line" style={{ color: "hsl(142 40% 40%)" }}>──────────────────────────────────</div>
         <div className="hero-log-line"><span style={{ color: "hsl(142 40% 40%)" }}>DATE:    </span>OCTOBER 29, 1969</div>
@@ -81,7 +81,7 @@ export default function SectionHero() {
       {/* Pull quote */}
       <p
         ref={quoteRef}
-        className="font-serif-era italic font-light text-[28px] md:text-[28px] max-w-[480px] text-center mt-12 leading-[1.4]"
+        className="font-serif-era italic font-light text-[22px] max-w-[min(100%,480px)] text-center mt-8 leading-[1.35] sm:mt-12 sm:text-[26px] md:text-[28px] md:leading-[1.4]"
         style={{ color: "hsl(142 80% 72%)", opacity: 0 }}
       >
         The first message was two letters long.
@@ -89,7 +89,7 @@ export default function SectionHero() {
 
       <p
         ref={subRef}
-        className="font-serif-era text-[18px] max-w-[480px] text-center mt-4"
+        className="font-serif-era text-[15px] max-w-[min(100%,480px)] text-center mt-3 sm:mt-4 sm:text-[17px] md:text-[18px]"
         style={{ color: "hsl(142 40% 40%)" }}
       >
         Everything you're reading right now started there.
@@ -97,7 +97,7 @@ export default function SectionHero() {
 
       {/* CTA */}
       <button
-        className="mt-10 font-display-era font-bold text-[13px] h-11 px-7 border transition-colors duration-200 active:scale-[0.97]"
+        className="mt-8 max-w-[calc(100vw-2rem)] font-display-era font-bold text-[11px] h-11 px-5 tracking-wide border transition-colors duration-200 active:scale-[0.97] sm:mt-10 sm:px-7 sm:text-[13px]"
         style={{
           fontStretch: "100%",
           letterSpacing: "0.12em",
@@ -122,10 +122,10 @@ export default function SectionHero() {
       </button>
 
       {/* Scroll indicator */}
-      <div className="hero-scroll-indicator absolute bottom-8 flex flex-col items-center gap-2">
+      <div className="hero-scroll-indicator absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] flex flex-col items-center gap-2 px-2 sm:bottom-8">
         <span
-          className="font-mono-era text-[9px]"
-          style={{ letterSpacing: "3px", color: "hsl(142 30% 20%)" }}
+          className="font-mono-era max-w-[16rem] text-center text-[7px] sm:max-w-none sm:text-[9px]"
+          style={{ letterSpacing: "clamp(1px, 0.6vw, 3px)", color: "hsl(142 30% 20%)" }}
         >
           SCROLL TO ADVANCE TRANSMISSION
         </span>
