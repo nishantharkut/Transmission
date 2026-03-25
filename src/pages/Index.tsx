@@ -18,6 +18,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 type EraKey = "arpanet" | "web1" | "web2" | "mobile" | "web3" | "present";
 
+/** Down the timeline vs rewinding — inverts curtain entry side for a “read vs rewind” beat. */
+type ScrollThrough = "forward" | "backward";
+
 const ERA_MAP: { selector: string; index: number; key: EraKey }[] = [
   { selector: "[data-era='arpanet']", index: 0, key: "arpanet" },
   { selector: "[data-era='web1']", index: 1, key: "web1" },
@@ -38,6 +41,10 @@ const ERA_WIPE_COLORS: Record<EraKey, string> = {
 };
 
 const ERA_WIPE_FROM_RIGHT: ReadonlySet<EraKey> = new Set(["web1", "mobile"]);
+
+/** Full-cover dwell: “carrier locked” before reveal (ms). */
+const COVER_HOLD_BASE = 0.1;
+const COVER_HOLD_WEB3_TO_NOW = 0.12;
 
 const LEGACY_ROOT_TWEEN_PROPS = [
   "--bg-h",
@@ -93,8 +100,9 @@ function stopWipeCleanup(wipe: HTMLElement) {
 /**
  * Curtain = decisive cover (snap into destination) + calmer reveal (no floaty expo tail).
  * Web3→NOW stays longer so two near luminances read as a deliberate beat.
+ * Full-cover hold = short “frequency locked” pause before peeling away.
  */
-function transitionEra(newEra: EraKey) {
+function transitionEra(newEra: EraKey, scrollThrough: ScrollThrough = "forward") {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     applyDocumentEra(newEra);
     lastSettledEraKey = newEra;
@@ -117,7 +125,10 @@ function transitionEra(newEra: EraKey) {
   const web3ToNow = newEra === "present" && prev === "web3";
   const coverDur = web3ToNow ? 0.46 : 0.32;
   const revealDur = web3ToNow ? 0.7 : 0.44;
-  const fromRight = ERA_WIPE_FROM_RIGHT.has(newEra);
+  const holdDur = web3ToNow ? COVER_HOLD_WEB3_TO_NOW : COVER_HOLD_BASE;
+
+  const baseFromRight = ERA_WIPE_FROM_RIGHT.has(newEra);
+  const fromRight = scrollThrough === "backward" ? !baseFromRight : baseFromRight;
 
   stopWipeCleanup(wipe);
   wipeInflightTarget = newEra;
@@ -164,7 +175,11 @@ function transitionEra(newEra: EraKey) {
     coverDur * 0.42,
   );
 
+  const revealAt = coverDur + holdDur;
+  const holdTick = { _t: 0 };
+
   tl.call(() => applyDocumentEra(newEra), undefined, coverDur);
+  tl.to(holdTick, { _t: 1, duration: holdDur, ease: "none" }, coverDur);
 
   tl.to(
     wipe,
@@ -173,7 +188,7 @@ function transitionEra(newEra: EraKey) {
       duration: revealDur,
       ease: revealEase,
     },
-    coverDur,
+    revealAt,
   );
 
   tl.to(
@@ -249,11 +264,11 @@ export default function Index() {
         end: "bottom 50%",
         onEnter: () => {
           setActiveEra(index);
-          transitionEra(key);
+          transitionEra(key, "forward");
         },
         onEnterBack: () => {
           setActiveEra(index);
-          transitionEra(key);
+          transitionEra(key, "backward");
         },
       });
     });
