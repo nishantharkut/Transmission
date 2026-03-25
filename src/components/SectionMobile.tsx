@@ -123,20 +123,8 @@ export default function SectionMobile() {
                 if (window.matchMedia("(hover: none)").matches) setShowBadges((v) => !v);
               }}
             >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute z-0 overflow-hidden"
-                style={{
-                  left: `${(8 / 260) * 100}%`,
-                  top: `${(8 / 540) * 100}%`,
-                  width: `${(244 / 260) * 100}%`,
-                  height: `${(524 / 540) * 100}%`,
-                  background: "hsl(0 0% 97%)",
-                  borderRadius: 0,
-                }}
-              />
               {/* Phone frame SVG — refined proportions */}
-              <svg viewBox="0 0 260 540" fill="none" className="relative z-[1] w-full pointer-events-none" aria-label="Phone wireframe showing mobile apps. Hover to see notifications.">
+              <svg viewBox="0 0 260 540" fill="none" className="w-full" aria-label="Phone wireframe showing mobile apps. Hover to see notifications.">
                 {/* Outer body with subtle shadow */}
                 <defs>
                   <filter id="phoneShadow" x="-10%" y="-5%" width="120%" height="110%">
@@ -145,7 +133,7 @@ export default function SectionMobile() {
                 </defs>
                 <rect x="1" y="1" width="258" height="538" rx="40" fill="hsl(0 0% 98%)" stroke="hsl(0 0% 82%)" strokeWidth="1.5" filter="url(#phoneShadow)" />
                 {/* Inner screen */}
-                <rect x="8" y="8" width="244" height="524" rx="36" fill="transparent" />
+                <rect x="8" y="8" width="244" height="524" rx="36" fill="hsl(0 0% 97%)" />
                 {/* Dynamic Island */}
                 <rect x="88" y="14" width="84" height="24" rx="12" fill="hsl(0 0% 8%)" />
                 {/* Side button */}
