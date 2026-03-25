@@ -27,7 +27,7 @@ const ERA_MAP: { selector: string; index: number; key: EraKey }[] = [
   { selector: "[data-era='present']", index: 5, key: "present" },
 ];
 
-/** Matches destination era page background (Approach B dark palettes). */
+/** Destination surface color (Approach B); avoids “wrong era” flash under the curtain. */
 const ERA_WIPE_COLORS: Record<EraKey, string> = {
   arpanet: "hsl(120 100% 3%)",
   web1: "hsl(38 18% 10%)",
@@ -37,7 +37,6 @@ const ERA_WIPE_COLORS: Record<EraKey, string> = {
   present: "hsl(220 18% 7%)",
 };
 
-/** Warm / alternate-register eras: curtain arrives from the right. */
 const ERA_WIPE_FROM_RIGHT: ReadonlySet<EraKey> = new Set(["web1", "mobile"]);
 
 const LEGACY_ROOT_TWEEN_PROPS = [
@@ -68,72 +67,124 @@ function applyDocumentEra(newEra: EraKey) {
   clearLegacyRootStyleProps();
 }
 
-/** Completed era, for Web3 → NOW timing only. */
 let lastSettledEraKey: EraKey | null = null;
+/** Target era of the in-flight wipe (dedupe rapid duplicate triggers). */
+let wipeInflightTarget: EraKey | null = null;
 let eraWipeTimeline: gsap.core.Timeline | null = null;
 
 function resetWipeTransform(wipe: HTMLElement, fromRight: boolean) {
-  wipe.toggleAttribute("data-wipe-from", fromRight);
+  if (fromRight) wipe.setAttribute("data-wipe-from", "");
+  else wipe.removeAttribute("data-wipe-from");
+
   gsap.set(wipe, {
     xPercent: fromRight ? 100 : -100,
     force3D: true,
+    "--wipe-edge-opacity": 0.28,
   });
 }
 
+function stopWipeCleanup(wipe: HTMLElement) {
+  eraWipeTimeline?.kill();
+  eraWipeTimeline = null;
+  gsap.killTweensOf(wipe);
+  wipe.style.removeProperty("will-change");
+}
+
 /**
- * Horizontal wipe + instant palette commit at full cover.
- * Asymmetric easing: decisive cover, luxurious reveal (reads “designed” vs cross-fade).
+ * Curtain = decisive cover (snap into destination) + calmer reveal (no floaty expo tail).
+ * Web3→NOW stays longer so two near luminances read as a deliberate beat.
  */
 function transitionEra(newEra: EraKey) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     applyDocumentEra(newEra);
     lastSettledEraKey = newEra;
+    wipeInflightTarget = null;
     return;
   }
 
-  const wipe = document.getElementById("era-wipe") as HTMLElement | null;
+  const wipe = document.getElementById("era-wipe");
   if (!wipe) {
     applyDocumentEra(newEra);
     lastSettledEraKey = newEra;
+    wipeInflightTarget = null;
     return;
   }
 
+  if (!eraWipeTimeline && newEra === lastSettledEraKey) return;
+  if (eraWipeTimeline && wipeInflightTarget === newEra) return;
+
   const prev = lastSettledEraKey;
   const web3ToNow = newEra === "present" && prev === "web3";
-  const coverDur = web3ToNow ? 0.48 : 0.36;
-  const revealDur = web3ToNow ? 0.72 : 0.5;
-
+  const coverDur = web3ToNow ? 0.46 : 0.32;
+  const revealDur = web3ToNow ? 0.7 : 0.44;
   const fromRight = ERA_WIPE_FROM_RIGHT.has(newEra);
 
-  eraWipeTimeline?.kill();
-  gsap.killTweensOf(wipe);
+  stopWipeCleanup(wipe);
+  wipeInflightTarget = newEra;
 
   wipe.style.setProperty("--wipe-color", ERA_WIPE_COLORS[newEra]);
   resetWipeTransform(wipe, fromRight);
+  wipe.style.willChange = "transform";
 
   const tl = gsap.timeline({
     defaults: { force3D: true },
     onComplete: () => {
       eraWipeTimeline = null;
+      wipeInflightTarget = null;
       lastSettledEraKey = newEra;
       wipe.style.removeProperty("will-change");
     },
   });
   eraWipeTimeline = tl;
 
-  wipe.style.willChange = "transform";
+  const coverEase = "power2.in";
+  const revealEase = "power3.out";
 
   if (fromRight) {
-    tl.fromTo(wipe, { xPercent: 100 }, { xPercent: 0, duration: coverDur, ease: "power4.in" });
+    tl.fromTo(wipe, { xPercent: 100 }, { xPercent: 0, duration: coverDur, ease: coverEase });
   } else {
-    tl.fromTo(wipe, { xPercent: -100 }, { xPercent: 0, duration: coverDur, ease: "power4.in" });
+    tl.fromTo(wipe, { xPercent: -100 }, { xPercent: 0, duration: coverDur, ease: coverEase });
   }
 
-  tl.call(() => applyDocumentEra(newEra)).to(wipe, {
-    xPercent: 100,
-    duration: revealDur,
-    ease: "expo.out",
-  });
+  tl.to(
+    wipe,
+    {
+      "--wipe-edge-opacity": 0.72,
+      duration: coverDur * 0.42,
+      ease: "power2.out",
+    },
+    0,
+  ).to(
+    wipe,
+    {
+      "--wipe-edge-opacity": 0.38,
+      duration: coverDur * 0.58,
+      ease: "power2.in",
+    },
+    coverDur * 0.42,
+  );
+
+  tl.call(() => applyDocumentEra(newEra), undefined, coverDur);
+
+  tl.to(
+    wipe,
+    {
+      xPercent: 100,
+      duration: revealDur,
+      ease: revealEase,
+    },
+    coverDur,
+  );
+
+  tl.to(
+    wipe,
+    {
+      "--wipe-edge-opacity": 0,
+      duration: Math.min(0.2, revealDur * 0.28),
+      ease: "power2.in",
+    },
+    "<",
+  );
 }
 
 function eraAtViewportCenter(): EraKey {
@@ -220,18 +271,17 @@ export default function Index() {
         setActiveEra(idx);
         applyDocumentEra(key);
         lastSettledEraKey = key;
-        const wipe = document.getElementById("era-wipe");
-        if (wipe) {
-          const fromRight = ERA_WIPE_FROM_RIGHT.has(key);
-          resetWipeTransform(wipe as HTMLElement, fromRight);
-        }
+        wipeInflightTarget = null;
+        const w = document.getElementById("era-wipe");
+        if (w) resetWipeTransform(w, ERA_WIPE_FROM_RIGHT.has(key));
       });
     });
 
     return () => {
       window.removeEventListener("resize", onResize);
-      eraWipeTimeline?.kill();
-      eraWipeTimeline = null;
+      const w = document.getElementById("era-wipe");
+      if (w) stopWipeCleanup(w);
+      wipeInflightTarget = null;
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, [loaded]);

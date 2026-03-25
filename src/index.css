@@ -182,45 +182,47 @@
   }
 
   /**
-   * Full-bleed era handoff (hybrid: wipe + document data-era).
-   * Signal line sells intentional “broadcast cut” vs accidental flash.
+   * Full-bleed era handoff. Transform is owned by GSAP only (no CSS transform
+   * rules) to avoid compositor fights. Overscan kills 1px viewport seams.
    */
   #era-wipe {
     position: fixed;
-    inset: 0;
+    top: -3px;
+    left: -3px;
+    width: calc(100vw + 6px);
+    height: calc(100dvh + 6px);
     z-index: 200;
     pointer-events: none;
-    transform: translate3d(-100%, 0, 0);
+    isolation: isolate;
     background: var(--wipe-color, hsl(220 25% 6%));
     backface-visibility: hidden;
-    contain: strict;
+    transform: translate3d(0, 0, 0);
+    --wipe-edge-opacity: 0.38;
   }
 
-  #era-wipe[data-wipe-from="right"] {
-    transform: translate3d(100%, 0, 0);
-  }
-
+  /* Leading edge: no filter (blur promoted layer + jank during xPercent). */
   #era-wipe::after {
     content: "";
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 3px;
+    width: 2px;
     right: 0;
     pointer-events: none;
+    opacity: var(--wipe-edge-opacity);
     background: linear-gradient(
       180deg,
-      transparent 8%,
-      color-mix(in srgb, white 55%, transparent) 50%,
-      transparent 92%
+      transparent 5%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 95%
     );
-    opacity: 0.45;
-    filter: blur(1px);
+    box-shadow: -6px 0 18px rgba(255, 255, 255, 0.07);
   }
 
   #era-wipe[data-wipe-from="right"]::after {
     right: auto;
     left: 0;
+    box-shadow: 6px 0 18px rgba(255, 255, 255, 0.07);
   }
 }
 
