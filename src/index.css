@@ -165,6 +165,16 @@
     padding-left: env(safe-area-inset-left, 0px);
     padding-right: env(safe-area-inset-right, 0px);
   }
+
+  /* Full-screen era transition (horizontal wipe). See Index.tsx */
+  #era-wipe {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    pointer-events: none;
+    transform: translateX(-100%);
+    background: var(--wipe-color, hsl(220 25% 6%));
+  }
 }
 
 /* Reserve space for fixed mobile scroll progress + home indicator */

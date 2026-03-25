@@ -16,7 +16,6 @@ import SectionClosing from "@/components/SectionClosing";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/** Must match `--era-{name}-*` custom properties in `src/index.css` (:root). */
 type EraKey = "arpanet" | "web1" | "web2" | "mobile" | "web3" | "present";
 
 const ERA_MAP: { selector: string; index: number; key: EraKey }[] = [
@@ -28,83 +27,93 @@ const ERA_MAP: { selector: string; index: number; key: EraKey }[] = [
   { selector: "[data-era='present']", index: 5, key: "present" },
 ];
 
-function parseHSL(str: string) {
-  const parts = str.replace(/%/g, "").split(/\s+/).map(Number);
-  return { h: parts[0], s: parts[1], l: parts[2] };
+/** Destination-era background for the wipe panel (removes wrong-color flash). */
+const ERA_WIPE_COLORS: Record<EraKey, string> = {
+  arpanet: "hsl(120 100% 3%)",
+  web1: "hsl(40 15% 92%)",
+  web2: "hsl(215 40% 10%)",
+  mobile: "hsl(0 0% 97%)",
+  web3: "hsl(252 22% 7%)",
+  present: "hsl(220 18% 7%)",
+};
+
+const LIGHT_ERA_ENTERS_FROM_RIGHT: ReadonlySet<EraKey> = new Set(["web1", "mobile"]);
+
+const LEGACY_ROOT_TWEEN_PROPS = [
+  "--bg-h",
+  "--bg-s",
+  "--bg-l",
+  "--text-h",
+  "--text-s",
+  "--text-l",
+  "--accent-h",
+  "--accent-s",
+  "--accent-l",
+  "--bg",
+  "--text",
+  "--text-dim",
+  "--text-ghost",
+  "--accent",
+  "--signal",
+] as const;
+
+function clearLegacyRootStyleProps() {
+  const s = document.documentElement.style;
+  LEGACY_ROOT_TWEEN_PROPS.forEach((p) => s.removeProperty(p));
 }
 
-function readEraPaletteFromCss(eraKey: EraKey) {
-  const root = getComputedStyle(document.documentElement);
-  const v = (suffix: string) => root.getPropertyValue(`--era-${eraKey}-${suffix}`).trim();
-
-  return {
-    bg: v("bg"),
-    text: v("text"),
-    textDim: v("text-dim"),
-    textGhost: v("text-ghost"),
-    accent: v("accent"),
-    signal: v("signal"),
-  };
+function applyDocumentEra(newEra: EraKey) {
+  document.documentElement.setAttribute("data-era", newEra);
+  clearLegacyRootStyleProps();
 }
 
-function animateEraTransition(eraKey: EraKey) {
-  const colors = readEraPaletteFromCss(eraKey);
-  const root = document.documentElement;
+let eraWipeTimeline: gsap.core.Timeline | null = null;
 
-  const targets = {
-    bg: parseHSL(colors.bg),
-    text: parseHSL(colors.text),
-    textDim: parseHSL(colors.textDim),
-    textGhost: parseHSL(colors.textGhost),
-    accent: parseHSL(colors.accent),
-    signal: parseHSL(colors.signal),
-  };
+function transitionEra(newEra: EraKey) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    applyDocumentEra(newEra);
+    return;
+  }
 
-  const current = {
-    bgH: parseFloat(getComputedStyle(root).getPropertyValue("--bg-h") || String(targets.bg.h)),
-    bgS: parseFloat(getComputedStyle(root).getPropertyValue("--bg-s") || String(targets.bg.s)),
-    bgL: parseFloat(getComputedStyle(root).getPropertyValue("--bg-l") || String(targets.bg.l)),
-    textH: parseFloat(getComputedStyle(root).getPropertyValue("--text-h") || String(targets.text.h)),
-    textS: parseFloat(getComputedStyle(root).getPropertyValue("--text-s") || String(targets.text.s)),
-    textL: parseFloat(getComputedStyle(root).getPropertyValue("--text-l") || String(targets.text.l)),
-    accentH: parseFloat(getComputedStyle(root).getPropertyValue("--accent-h") || String(targets.accent.h)),
-    accentS: parseFloat(getComputedStyle(root).getPropertyValue("--accent-s") || String(targets.accent.s)),
-    accentL: parseFloat(getComputedStyle(root).getPropertyValue("--accent-l") || String(targets.accent.l)),
-  };
+  const wipe = document.getElementById("era-wipe");
+  if (!wipe) {
+    applyDocumentEra(newEra);
+    return;
+  }
 
-  const duration = eraKey === "web3" ? 1.0 : eraKey === "present" ? 1.4 : 1.2;
-  const ease = eraKey === "web3" ? "power2.in" : "power2.inOut";
+  eraWipeTimeline?.kill();
+  wipe.style.setProperty("--wipe-color", ERA_WIPE_COLORS[newEra]);
+  gsap.killTweensOf(wipe);
 
-  gsap.to(current, {
-    bgH: targets.bg.h,
-    bgS: targets.bg.s,
-    bgL: targets.bg.l,
-    textH: targets.text.h,
-    textS: targets.text.s,
-    textL: targets.text.l,
-    accentH: targets.accent.h,
-    accentS: targets.accent.s,
-    accentL: targets.accent.l,
-    duration,
-    ease,
-    onUpdate: () => {
-      root.style.setProperty("--bg-h", String(current.bgH));
-      root.style.setProperty("--bg-s", String(current.bgS));
-      root.style.setProperty("--bg-l", String(current.bgL));
-      root.style.setProperty("--text-h", String(current.textH));
-      root.style.setProperty("--text-s", String(current.textS));
-      root.style.setProperty("--text-l", String(current.textL));
-      root.style.setProperty("--accent-h", String(current.accentH));
-      root.style.setProperty("--accent-s", String(current.accentS));
-      root.style.setProperty("--accent-l", String(current.accentL));
-      root.style.setProperty("--bg", `${current.bgH} ${current.bgS}% ${current.bgL}%`);
-      root.style.setProperty("--text", `${current.textH} ${current.textS}% ${current.textL}%`);
-      root.style.setProperty("--text-dim", `${targets.textDim.h} ${targets.textDim.s}% ${targets.textDim.l}%`);
-      root.style.setProperty("--text-ghost", `${targets.textGhost.h} ${targets.textGhost.s}% ${targets.textGhost.l}%`);
-      root.style.setProperty("--accent", `${current.accentH} ${current.accentS}% ${current.accentL}%`);
-      root.style.setProperty("--signal", `${targets.signal.h} ${targets.signal.s}% ${targets.signal.l}%`);
+  const tl = gsap.timeline({
+    onComplete: () => {
+      eraWipeTimeline = null;
     },
   });
+  eraWipeTimeline = tl;
+
+  const fromRight = LIGHT_ERA_ENTERS_FROM_RIGHT.has(newEra);
+
+  if (fromRight) {
+    tl.fromTo(wipe, { x: "100%" }, { x: "0%", duration: 0.45, ease: "power2.in" });
+  } else {
+    tl.fromTo(wipe, { x: "-100%" }, { x: "0%", duration: 0.45, ease: "power2.in" });
+  }
+
+  tl.call(() => applyDocumentEra(newEra))
+    .to(wipe, { x: "100%", duration: 0.45, ease: "power2.out" })
+    .set(wipe, { x: "-100%" });
+}
+
+function eraAtViewportCenter(): EraKey {
+  const mid = window.innerHeight * 0.5;
+  for (const { key, selector } of ERA_MAP) {
+    const el = document.querySelector(selector);
+    if (!el) continue;
+    const r = el.getBoundingClientRect();
+    if (r.top < mid && r.bottom > mid) return key;
+  }
+  return "arpanet";
 }
 
 export default function Index() {
@@ -112,6 +121,7 @@ export default function Index() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeEra, setActiveEra] = useState(0);
   const lenisRef = useRef<Lenis | null>(null);
+  const didSyncInitialEra = useRef(false);
 
   const handlePreloaderComplete = useCallback(() => setLoaded(true), []);
 
@@ -122,7 +132,6 @@ export default function Index() {
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      // Let native touch scrolling drive the page on phones (better feel + fewer pin glitches)
       touchMultiplier: window.matchMedia("(max-width: 767px)").matches ? 1.5 : 1,
     });
     lenisRef.current = lenis;
@@ -158,11 +167,11 @@ export default function Index() {
         end: "bottom 50%",
         onEnter: () => {
           setActiveEra(index);
-          animateEraTransition(key);
+          transitionEra(key);
         },
         onEnterBack: () => {
           setActiveEra(index);
-          animateEraTransition(key);
+          transitionEra(key);
         },
       });
     });
@@ -170,9 +179,23 @@ export default function Index() {
     const onResize = () => ScrollTrigger.refresh();
     window.addEventListener("resize", onResize);
 
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        if (didSyncInitialEra.current) return;
+        didSyncInitialEra.current = true;
+        const key = eraAtViewportCenter();
+        const idx = ERA_MAP.find((e) => e.key === key)?.index ?? 0;
+        setActiveEra(idx);
+        applyDocumentEra(key);
+      });
+    });
+
     return () => {
       window.removeEventListener("resize", onResize);
       ScrollTrigger.getAll().forEach((t) => t.kill());
+      eraWipeTimeline?.kill();
+      eraWipeTimeline = null;
     };
   }, [loaded]);
 
@@ -182,6 +205,7 @@ export default function Index() {
 
   return (
     <div className="relative overflow-x-hidden" style={{ backgroundColor: "hsl(var(--bg))" }}>
+      <div id="era-wipe" aria-hidden />
       <Navbar scrollProgress={scrollProgress} activeEra={activeEra} />
       <TimelineRail activeIndex={activeEra} scrollProgress={scrollProgress} />
       <main>
