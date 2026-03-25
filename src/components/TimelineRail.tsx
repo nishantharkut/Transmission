@@ -6,7 +6,7 @@ const ERA_LIVE_HSL: { h: number; s: number; l: number }[] = [
   { h: 142, s: 70, l: 55 }, // ARPANET
   { h: 240, s: 80, l: 60 }, // WWW
   { h: 200, s: 75, l: 55 }, // DOT-COM
-  { h: 211, s: 100, l: 55 }, // MOBILE
+  { h: 211, s: 100, l: 58 }, // MOBILE
   { h: 252, s: 60, l: 65 }, // WEB3 periwinkle
   { h: 142, s: 70, l: 55 }, // NOW
 ];

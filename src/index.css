@@ -49,12 +49,12 @@
     --era-arpanet-accent: 142 90% 60%;
     --era-arpanet-signal: 142 90% 60%;
 
-    --era-web1-bg: 40 15% 94%;
-    --era-web1-text: 0 0% 10%;
-    --era-web1-text-dim: 0 0% 35%;
-    --era-web1-text-ghost: 0 0% 60%;
-    --era-web1-accent: 240 100% 50%;
-    --era-web1-signal: 240 100% 50%;
+    --era-web1-bg: 38 18% 10%;
+    --era-web1-text: 38 20% 86%;
+    --era-web1-text-dim: 38 10% 55%;
+    --era-web1-text-ghost: 38 8% 32%;
+    --era-web1-accent: 240 70% 65%;
+    --era-web1-signal: 240 70% 65%;
 
     --era-web2-bg: 215 40% 10%;
     --era-web2-text: 200 20% 90%;
@@ -63,12 +63,12 @@
     --era-web2-accent: 200 90% 55%;
     --era-web2-signal: 200 90% 55%;
 
-    --era-mobile-bg: 0 0% 97%;
-    --era-mobile-text: 0 0% 13%;
-    --era-mobile-text-dim: 0 0% 45%;
-    --era-mobile-text-ghost: 0 0% 65%;
-    --era-mobile-accent: 211 100% 50%;
-    --era-mobile-signal: 211 100% 50%;
+    --era-mobile-bg: 220 14% 13%;
+    --era-mobile-text: 220 8% 90%;
+    --era-mobile-text-dim: 220 5% 55%;
+    --era-mobile-text-ghost: 220 5% 33%;
+    --era-mobile-accent: 211 100% 58%;
+    --era-mobile-signal: 211 100% 58%;
 
     --era-web3-bg: 252 22% 7%;
     --era-web3-bg-raised: 252 18% 13%;
@@ -99,12 +99,20 @@
 }
 
 [data-era="web1"] {
-  --bg: var(--era-web1-bg);
-  --text: var(--era-web1-text);
-  --text-dim: var(--era-web1-text-dim);
-  --text-ghost: var(--era-web1-text-ghost);
-  --accent: var(--era-web1-accent);
-  --signal: var(--era-web1-signal);
+  --bg: 38 18% 10%;
+  --bg-raised: 38 15% 15%;
+  --bg-elevated: 38 12% 19%;
+
+  --text: 38 20% 86%;
+  --text-dim: 38 10% 55%;
+  --text-ghost: 38 8% 32%;
+
+  --accent: 240 70% 65%;
+  --accent-dim: hsla(240, 70%, 65%, 0.12);
+  --signal: 240 70% 65%;
+
+  --border: rgba(255, 220, 150, 0.06);
+  --border-warm: rgba(255, 220, 150, 0.04);
 }
 
 [data-era="web2"] {
@@ -117,12 +125,19 @@
 }
 
 [data-era="mobile"] {
-  --bg: var(--era-mobile-bg);
-  --text: var(--era-mobile-text);
-  --text-dim: var(--era-mobile-text-dim);
-  --text-ghost: var(--era-mobile-text-ghost);
-  --accent: var(--era-mobile-accent);
-  --signal: var(--era-mobile-signal);
+  --bg: 220 14% 13%;
+  --bg-raised: 220 12% 18%;
+  --bg-elevated: 220 10% 22%;
+
+  --text: 220 8% 90%;
+  --text-dim: 220 5% 55%;
+  --text-ghost: 220 5% 33%;
+
+  --accent: 211 100% 58%;
+  --accent-dim: hsla(211, 100%, 58%, 0.12);
+  --signal: 211 100% 58%;
+
+  --border: rgba(255, 255, 255, 0.07);
 }
 
 [data-era="web3"] {

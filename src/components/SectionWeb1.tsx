@@ -38,7 +38,7 @@ export default function SectionWeb1() {
       <div
         ref={pinnedRef}
         className="relative min-h-dvh overflow-hidden"
-        style={{ backgroundColor: "hsl(40 15% 94%)" }}
+        style={{ backgroundColor: "hsl(var(--bg))" }}
       >
         {/* Narrative label — positioned below navbar with solid background for legibility */}
         <div
@@ -47,7 +47,7 @@ export default function SectionWeb1() {
         >
           <p
             className="font-serif-era text-[17px] font-light italic leading-[1.45] sm:text-[19px] md:text-[22px] md:leading-[1.5]"
-            style={{ color: "hsl(0 0% 20%)" }}
+            style={{ color: "hsl(38 20% 72%)" }}
           >
             In 1991, a scientist gave away the web for free. No patent. No royalties. Just the gift.
           </p>
@@ -63,12 +63,15 @@ export default function SectionWeb1() {
         {/* Sub-state A: 1991 first website — actual recreation */}
         <div ref={stateARef} className="absolute inset-0 flex items-center justify-center px-3 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24">
           <div
-            className="w-full max-w-[660px] p-4 sm:p-8 md:p-12"
+            className="w-full max-w-[660px]"
             style={{
-              backgroundColor: "hsl(0 0% 96%)",
-              border: "1px solid hsl(0 0% 82%)",
+              background: "hsl(40 30% 95%)",
+              color: "hsl(0 0% 12%)",
+              padding: "32px 36px",
+              border: "1px solid hsl(40 20% 82%)",
+              borderRadius: 2,
+              boxShadow: "0 4px 32px hsla(38, 30%, 5%, 0.5)",
               fontFamily: "'Times New Roman', 'Crimson Pro', serif",
-              color: "hsl(0 0% 8%)",
             }}
           >
             <div className="mb-6 pb-4" style={{ borderBottom: "1px solid hsl(0 0% 80%)" }}>
@@ -82,7 +85,7 @@ export default function SectionWeb1() {
 
             <p className="text-[15px] md:text-[16px] leading-[1.9] mb-4" style={{ color: "hsl(0 0% 18%)" }}>
               The WorldWideWeb (W3) is a wide-area{" "}
-              <span style={{ color: "hsl(240 100% 40%)", textDecoration: "underline", cursor: "pointer" }}>
+              <span style={{ color: "hsl(240 100% 45%)", textDecoration: "underline", cursor: "pointer" }}>
                 hypermedia
               </span>{" "}
               information retrieval initiative aiming to give universal access to a large universe of documents.
@@ -90,41 +93,41 @@ export default function SectionWeb1() {
 
             <p className="text-[15px] md:text-[16px] leading-[1.9] mb-4" style={{ color: "hsl(0 0% 18%)" }}>
               Everything there is online about W3 is linked directly or indirectly to this document, including an{" "}
-              <span style={{ color: "hsl(240 100% 40%)", textDecoration: "underline", cursor: "pointer" }}>
+              <span style={{ color: "hsl(240 100% 45%)", textDecoration: "underline", cursor: "pointer" }}>
                 executive summary
               </span>{" "}
               of the project,{" "}
-              <span style={{ color: "hsl(240 100% 40%)", textDecoration: "underline", cursor: "pointer" }}>
+              <span style={{ color: "hsl(240 100% 45%)", textDecoration: "underline", cursor: "pointer" }}>
                 Mailing lists
               </span>
               ,{" "}
-              <span style={{ color: "hsl(240 100% 40%)", textDecoration: "underline", cursor: "pointer" }}>
+              <span style={{ color: "hsl(240 100% 45%)", textDecoration: "underline", cursor: "pointer" }}>
                 Policy
               </span>
               , and{" "}
-              <span style={{ color: "hsl(240 100% 40%)", textDecoration: "underline", cursor: "pointer" }}>
+              <span style={{ color: "hsl(240 100% 45%)", textDecoration: "underline", cursor: "pointer" }}>
                 details of the technical design
               </span>.
             </p>
 
             <ul className="text-[14px] leading-[2] ml-6 list-disc" style={{ color: "hsl(0 0% 25%)" }}>
               <li>
-                <span style={{ color: "hsl(240 100% 40%)", textDecoration: "underline", cursor: "pointer" }}>
+                <span style={{ color: "hsl(240 100% 45%)", textDecoration: "underline", cursor: "pointer" }}>
                   What's out there?
                 </span>
               </li>
               <li>
-                <span style={{ color: "hsl(240 100% 40%)", textDecoration: "underline", cursor: "pointer" }}>
+                <span style={{ color: "hsl(240 100% 45%)", textDecoration: "underline", cursor: "pointer" }}>
                   Help
                 </span>
               </li>
               <li>
-                <span style={{ color: "hsl(240 100% 40%)", textDecoration: "underline", cursor: "pointer" }}>
+                <span style={{ color: "hsl(240 100% 45%)", textDecoration: "underline", cursor: "pointer" }}>
                   Software Products
                 </span>
               </li>
               <li>
-                <span style={{ color: "hsl(240 100% 40%)", textDecoration: "underline", cursor: "pointer" }}>
+                <span style={{ color: "hsl(240 100% 45%)", textDecoration: "underline", cursor: "pointer" }}>
                   Bibliography
                 </span>
               </li>

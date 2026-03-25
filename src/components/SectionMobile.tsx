@@ -83,31 +83,31 @@ export default function SectionMobile() {
       <div
         ref={pinnedRef}
         className="relative flex min-h-dvh items-center"
-        style={{ backgroundColor: "hsl(0 0% 97%)" }}
+        style={{ backgroundColor: "hsl(var(--bg))" }}
       >
         <div className="mx-auto grid w-full max-w-[1080px] grid-cols-1 items-center gap-10 px-4 py-8 md:grid-cols-2 md:gap-16 md:py-0 sm:px-6">
           {/* Left text */}
           <div>
-            <div className="font-mono-era text-[10px] mb-4" style={{ color: "hsl(0 0% 60%)", letterSpacing: "2px" }}>
+            <div className="font-mono-era text-[10px] mb-4" style={{ color: "hsl(var(--text-ghost))", letterSpacing: "2px" }}>
               ERA 04 · MOBILE & SOCIAL
             </div>
             <h2
               className="font-serif-era font-semibold text-[22px] md:text-[36px] leading-[1.2] mb-6"
-              style={{ color: "hsl(0 0% 13%)" }}
+              style={{ color: "hsl(var(--text))" }}
             >
               The phone became the web. The feed became the thought.
             </h2>
-            <p className="font-ui-era text-[15px] max-w-[420px] leading-[1.7]" style={{ color: "hsl(0 0% 45%)" }}>
+            <p className="font-ui-era text-[15px] max-w-[420px] leading-[1.7]" style={{ color: "hsl(var(--text-dim))" }}>
               By 2020, the average person touched their phone 2,617 times a day. The internet had stopped being a place you visited.
             </p>
             <div className="mt-6 flex flex-wrap gap-8 sm:mt-8 sm:gap-12">
               <div>
-                <div className="font-mono-era font-bold text-[28px]" style={{ color: "hsl(0 0% 13%)" }}>2,617</div>
-                <div className="font-ui-era text-[11px] mt-1" style={{ color: "hsl(0 0% 55%)" }}>daily touches</div>
+                <div className="font-mono-era font-bold text-[28px]" style={{ color: "hsl(var(--text))" }}>2,617</div>
+                <div className="font-ui-era text-[11px] mt-1" style={{ color: "hsl(var(--text-dim))" }}>daily touches</div>
               </div>
               <div>
-                <div className="font-mono-era font-bold text-[28px]" style={{ color: "hsl(0 0% 13%)" }}>3.5B</div>
-                <div className="font-ui-era text-[11px] mt-1" style={{ color: "hsl(0 0% 55%)" }}>smartphone users</div>
+                <div className="font-mono-era font-bold text-[28px]" style={{ color: "hsl(var(--text))" }}>3.5B</div>
+                <div className="font-ui-era text-[11px] mt-1" style={{ color: "hsl(var(--text-dim))" }}>smartphone users</div>
               </div>
             </div>
           </div>
@@ -123,8 +123,20 @@ export default function SectionMobile() {
                 if (window.matchMedia("(hover: none)").matches) setShowBadges((v) => !v);
               }}
             >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute z-0 overflow-hidden"
+                style={{
+                  left: `${(8 / 260) * 100}%`,
+                  top: `${(8 / 540) * 100}%`,
+                  width: `${(244 / 260) * 100}%`,
+                  height: `${(524 / 540) * 100}%`,
+                  background: "hsl(0 0% 97%)",
+                  borderRadius: 0,
+                }}
+              />
               {/* Phone frame SVG — refined proportions */}
-              <svg viewBox="0 0 260 540" fill="none" className="w-full" aria-label="Phone wireframe showing mobile apps. Hover to see notifications.">
+              <svg viewBox="0 0 260 540" fill="none" className="relative z-[1] w-full pointer-events-none" aria-label="Phone wireframe showing mobile apps. Hover to see notifications.">
                 {/* Outer body with subtle shadow */}
                 <defs>
                   <filter id="phoneShadow" x="-10%" y="-5%" width="120%" height="110%">
@@ -133,7 +145,7 @@ export default function SectionMobile() {
                 </defs>
                 <rect x="1" y="1" width="258" height="538" rx="40" fill="hsl(0 0% 98%)" stroke="hsl(0 0% 82%)" strokeWidth="1.5" filter="url(#phoneShadow)" />
                 {/* Inner screen */}
-                <rect x="8" y="8" width="244" height="524" rx="36" fill="hsl(0 0% 97%)" />
+                <rect x="8" y="8" width="244" height="524" rx="36" fill="transparent" />
                 {/* Dynamic Island */}
                 <rect x="88" y="14" width="84" height="24" rx="12" fill="hsl(0 0% 8%)" />
                 {/* Side button */}

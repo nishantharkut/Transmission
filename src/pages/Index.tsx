@@ -28,6 +28,10 @@ const ERA_MAP: { selector: string; index: number; key: EraKey }[] = [
   { selector: "[data-era='present']", index: 5, key: "present" },
 ];
 
+/** Last completed era transition; used to extend timing for Web3 → NOW only. */
+let lastCompletedEraKey: EraKey | null = null;
+let eraColorTween: gsap.core.Tween | null = null;
+
 function parseHSL(str: string) {
   const parts = str.replace(/%/g, "").split(/\s+/).map(Number);
   return { h: parts[0], s: parts[1], l: parts[2] };
@@ -48,6 +52,13 @@ function readEraPaletteFromCss(eraKey: EraKey) {
 }
 
 function animateEraTransition(eraKey: EraKey) {
+  const previousEra = lastCompletedEraKey;
+  const fromWeb3ToPresent = eraKey === "present" && previousEra === "web3";
+  const duration = fromWeb3ToPresent ? 1.2 : 0.9;
+  const ease = "power2.inOut";
+
+  eraColorTween?.kill();
+
   const colors = readEraPaletteFromCss(eraKey);
   const root = document.documentElement;
 
@@ -72,10 +83,7 @@ function animateEraTransition(eraKey: EraKey) {
     accentL: parseFloat(getComputedStyle(root).getPropertyValue("--accent-l") || String(targets.accent.l)),
   };
 
-  const duration = eraKey === "web3" ? 1.0 : eraKey === "present" ? 1.4 : 1.2;
-  const ease = eraKey === "web3" ? "power2.in" : "power2.inOut";
-
-  gsap.to(current, {
+  eraColorTween = gsap.to(current, {
     bgH: targets.bg.h,
     bgS: targets.bg.s,
     bgL: targets.bg.l,
@@ -103,6 +111,10 @@ function animateEraTransition(eraKey: EraKey) {
       root.style.setProperty("--text-ghost", `${targets.textGhost.h} ${targets.textGhost.s}% ${targets.textGhost.l}%`);
       root.style.setProperty("--accent", `${current.accentH} ${current.accentS}% ${current.accentL}%`);
       root.style.setProperty("--signal", `${targets.signal.h} ${targets.signal.s}% ${targets.signal.l}%`);
+    },
+    onComplete: () => {
+      lastCompletedEraKey = eraKey;
+      eraColorTween = null;
     },
   });
 }
@@ -172,6 +184,8 @@ export default function Index() {
 
     return () => {
       window.removeEventListener("resize", onResize);
+      eraColorTween?.kill();
+      eraColorTween = null;
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, [loaded]);
