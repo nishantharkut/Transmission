@@ -180,6 +180,48 @@
     padding-left: env(safe-area-inset-left, 0px);
     padding-right: env(safe-area-inset-right, 0px);
   }
+
+  /**
+   * Full-bleed era handoff (hybrid: wipe + document data-era).
+   * Signal line sells intentional “broadcast cut” vs accidental flash.
+   */
+  #era-wipe {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    pointer-events: none;
+    transform: translate3d(-100%, 0, 0);
+    background: var(--wipe-color, hsl(220 25% 6%));
+    backface-visibility: hidden;
+    contain: strict;
+  }
+
+  #era-wipe[data-wipe-from="right"] {
+    transform: translate3d(100%, 0, 0);
+  }
+
+  #era-wipe::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    right: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      transparent 8%,
+      color-mix(in srgb, white 55%, transparent) 50%,
+      transparent 92%
+    );
+    opacity: 0.45;
+    filter: blur(1px);
+  }
+
+  #era-wipe[data-wipe-from="right"]::after {
+    right: auto;
+    left: 0;
+  }
 }
 
 /* Reserve space for fixed mobile scroll progress + home indicator */
