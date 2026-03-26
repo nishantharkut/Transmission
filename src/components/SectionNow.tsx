@@ -31,6 +31,14 @@ interface Node {
   vy: number;
 }
 
+const NETWORK_BASE = "hsl(142 64% 54%)";
+const NETWORK_BASE_SOFT = "hsla(142, 64%, 54%, 0.24)";
+const NETWORK_LINK = "hsla(142, 56%, 46%, 0.14)";
+const NETWORK_LINK_NEAR = "hsla(142, 62%, 54%, 0.22)";
+const NETWORK_CURSOR = "hsl(142 78% 66%)";
+const NETWORK_CURSOR_LINK = "hsla(142, 78%, 66%, 0.55)";
+const NETWORK_CURSOR_GLOW = "hsla(142, 92%, 72%, 0.22)";
+
 export default function SectionNow() {
   const sectionRef = useRef<HTMLElement>(null);
   const counterRef = useRef<HTMLDivElement>(null);
@@ -81,7 +89,7 @@ export default function SectionNow() {
           gsap.fromTo(
             nodeTextRef.current,
             { opacity: 0 },
-            { opacity: 1, duration: 0.8, delay: 2 }
+            { opacity: 1, duration: 0.7, delay: 0.7 }
           );
         },
       });
@@ -130,15 +138,16 @@ export default function SectionNow() {
         if (n.y < 0 || n.y > rect.height) n.vy *= -1;
       });
 
-      const maxDist = 100;
-      ctx.strokeStyle = "hsla(142, 60%, 50%, 0.08)";
-      ctx.lineWidth = 0.5;
+      const maxDist = 118;
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const dx = nodes[i].x - nodes[j].x;
           const dy = nodes[i].y - nodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < maxDist) {
+            const strength = 1 - dist / maxDist;
+            ctx.strokeStyle = strength > 0.55 ? NETWORK_LINK_NEAR : NETWORK_LINK;
+            ctx.lineWidth = strength > 0.55 ? 0.95 : 0.65;
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
@@ -147,10 +156,15 @@ export default function SectionNow() {
         }
       }
 
-      ctx.fillStyle = "hsla(142, 60%, 50%, 0.3)";
       nodes.forEach((n) => {
+        ctx.fillStyle = NETWORK_BASE_SOFT;
         ctx.beginPath();
-        ctx.arc(n.x, n.y, 2, 0, Math.PI * 2);
+        ctx.arc(n.x, n.y, 2.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = NETWORK_BASE;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 1.2, 0, Math.PI * 2);
         ctx.fill();
       });
 
@@ -160,19 +174,30 @@ export default function SectionNow() {
           dist: Math.sqrt((n.x - mouse.x) ** 2 + (n.y - mouse.y) ** 2),
         })).sort((a, b) => a.dist - b.dist);
 
-        ctx.strokeStyle = "hsla(142, 70%, 65%, 0.3)";
-        ctx.lineWidth = 1;
         for (let k = 0; k < Math.min(3, distances.length); k++) {
           const n = nodes[distances[k].i];
+          const linkStrength = Math.max(0.35, 1 - distances[k].dist / 180);
+          ctx.strokeStyle = `hsla(142, 78%, 66%, ${0.3 + linkStrength * 0.35})`;
+          ctx.lineWidth = 1.25 + linkStrength * 0.55;
           ctx.beginPath();
           ctx.moveTo(mouse.x, mouse.y);
           ctx.lineTo(n.x, n.y);
           ctx.stroke();
         }
 
-        ctx.fillStyle = "hsl(142, 70%, 65%)";
+        ctx.fillStyle = NETWORK_CURSOR_GLOW;
         ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 5, 0, Math.PI * 2);
+        ctx.arc(mouse.x, mouse.y, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = NETWORK_CURSOR_LINK;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 7.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = NETWORK_CURSOR;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 5.5, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -354,7 +379,7 @@ export default function SectionNow() {
       </div>
 
       {/* Canvas network */}
-      <div className="mt-12 px-4 sm:mt-20 sm:px-6">
+      <div className="mt-6 px-4 sm:mt-10 sm:px-6">
         <canvas
           ref={canvasRef}
           className="h-[min(42vh,260px)] w-full touch-none sm:h-[min(48vh,340px)] md:h-[60vh]"

@@ -240,11 +240,9 @@ export default function SectionDotCom() {
           </svg>
 
           {/* Slider — Lenis smooth-scroll steals touchmove unless we opt this subtree out */}
-          <div
-            data-lenis-prevent
-            className="touch-pan-x"
-          >
+          <div>
             <input
+              data-lenis-prevent
               type="range"
               min={0}
               max={100}
@@ -257,6 +255,7 @@ export default function SectionDotCom() {
                 background: `linear-gradient(to right, hsl(200 90% 55%) ${sliderVal}%, hsl(200 10% 25%) ${sliderVal}%)`,
                 borderRadius: 0,
                 accentColor: "hsl(200 90% 55%)",
+                touchAction: "pan-y",
               }}
               aria-label="Navigate through the dot-com bubble timeline"
               aria-describedby={showSliderHint ? "dotcom-slider-hint" : undefined}

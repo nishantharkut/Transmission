@@ -20,6 +20,10 @@ function eraFillGradient(active: { h: number; s: number; l: number }) {
   return `linear-gradient(to bottom, hsl(${active.h} ${active.s}% ${lo}%), hsl(${active.h} ${active.s}% ${active.l}%))`;
 }
 
+function hsla(e: { h: number; s: number; l: number }, alpha: number) {
+  return `hsla(${e.h}, ${e.s}%, ${e.l}%, ${alpha})`;
+}
+
 const ERAS = [
   { year: "1969", label: "ARPANET" },
   { year: "1991", label: "WWW" },
@@ -32,12 +36,12 @@ const ERAS = [
 /** Logged past — always dim phosphor */
 const PAST_NODE_BG = "hsl(142 55% 22%)";
 const PAST_NODE_BORDER = "hsl(142 55% 32%)";
-const PAST_YEAR = "hsl(142 35% 35%)";
-const PAST_ERA = "hsl(142 30% 28%)";
+const PAST_YEAR = "hsl(142 34% 40%)";
+const PAST_ERA = "hsl(142 24% 30%)";
 
 const FUTURE_NODE_BORDER = "hsl(220 6% 22%)";
-const FUTURE_YEAR = "hsl(220 6% 24%)";
-const FUTURE_ERA = "hsl(220 6% 20%)";
+const FUTURE_YEAR = "hsl(220 7% 34%)";
+const FUTURE_ERA = "hsl(220 7% 26%)";
 
 const TRACK_BASE = "hsl(220 6% 16%)";
 const MOBILE_FILL = "hsl(142 70% 55%)";
@@ -55,7 +59,8 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
 
   const live = ERA_LIVE_HSL[activeIndex] ?? ERA_LIVE_HSL[0];
   const liveCss = hslStr(live);
-  const liveGlow = `0 0 0 3px hsla(${live.h}, ${live.s}%, ${live.l}%, 0.15), 0 0 12px hsla(${live.h}, ${live.s}%, ${live.l}%, 0.25)`;
+  const liveGlow = `0 0 0 3px ${hsla(live, 0.12)}, 0 0 12px ${hsla(live, 0.24)}`;
+  const livePanel = hsla(live, 0.06);
 
   const activeEra = ERAS[activeIndex] ?? ERAS[0];
   const activeYear = activeIndex === ERAS.length - 1 ? presentYear : activeEra.year;
@@ -86,19 +91,19 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
     <>
       {/* Desktop — frequency scanner */}
       <nav
-        className="pointer-events-auto fixed left-6 top-1/2 z-50 hidden w-[160px] -translate-y-1/2 flex-col gap-0 md:flex"
+        className="pointer-events-auto fixed left-5 top-1/2 z-50 hidden w-[124px] -translate-y-1/2 flex-col md:flex"
         aria-label="Transmission frequency bands"
       >
-        <div className="relative flex w-full flex-col">
+        <div className="relative flex w-full flex-col py-2">
           {/* Track + scroll fill */}
           <div
-            className="pointer-events-none absolute bottom-0 left-[5px] top-0 z-0 w-px"
+            className="pointer-events-none absolute bottom-2 left-[10px] top-2 z-0 w-px"
             style={{ background: TRACK_BASE }}
           />
           <div
-            className="pointer-events-none absolute left-[5px] top-0 z-0 w-px overflow-hidden"
+            className="pointer-events-none absolute left-[10px] top-2 z-0 w-px overflow-hidden"
             style={{
-              height: `${scrollProgress * 100}%`,
+              height: `calc((100% - 1rem) * ${scrollProgress})`,
               background: eraFillGradient(live),
               transition: "height 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.8s ease",
             }}
@@ -152,25 +157,30 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
 
               const hovered = hoverIndex === i && !isActive;
               if (hovered) {
-                yearColor = "hsl(220 8% 55%)";
-                eraColor = "hsl(220 8% 48%)";
+                yearColor = "hsl(220 8% 62%)";
+                eraColor = "hsl(220 8% 54%)";
               }
 
               return (
                 <li
                   key={key}
-                  className="relative flex items-center gap-3 py-[10px] pl-5"
-                  style={{ paddingLeft: 20 }}
+                  className="relative flex items-center rounded-[10px] py-[8px]"
+                  style={{
+                    paddingLeft: 20,
+                    background: isActive ? livePanel : hovered ? "hsla(220, 10%, 100%, 0.02)" : "transparent",
+                    boxShadow: isActive ? `inset 0 0 0 1px ${hsla(live, 0.08)}` : "none",
+                    transition: "background 0.35s ease, box-shadow 0.35s ease",
+                  }}
                   aria-current={isActive ? "true" : undefined}
                   onMouseEnter={() => setHoverIndex(i)}
                   onMouseLeave={() => setHoverIndex(null)}
                 >
                   {isActive && (
                     <span
-                      className="pointer-events-none absolute top-1/2 z-[2] w-[3px] rounded-r-[2px]"
+                      className="pointer-events-none absolute top-1/2 z-[2] w-[3px] rounded-r-[3px]"
                       style={{
-                        left: -24,
-                        height: 28,
+                        left: -2,
+                        height: 24,
                         transform: "translateY(-50%)",
                         background: liveCss,
                         transition: "height 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.8s ease",
@@ -179,18 +189,27 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
                   )}
 
                   <span
-                    className="absolute left-[5px] top-1/2 z-[1] size-[11px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+                    className="absolute left-[10px] top-1/2 z-[1] -translate-x-1/2 -translate-y-1/2 rounded-full"
                     style={{
+                      width: isActive ? 14 : 10,
+                      height: isActive ? 14 : 10,
                       background: nodeBg,
                       border: `1px solid ${hovered && !isActive ? "hsl(220 8% 40%)" : nodeBorder}`,
                       boxShadow: nodeShadow,
                       transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                     }}
-                  />
+                  >
+                    {isActive && (
+                      <span
+                        className="absolute left-1/2 top-1/2 h-[5px] w-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+                        style={{ background: "hsl(220 18% 7%)" }}
+                      />
+                    )}
+                  </span>
 
-                  <div className="flex min-w-0 flex-1 flex-col gap-px pl-[7px]">
+                  <div className="flex min-w-0 flex-1 flex-col gap-[2px] pl-[8px]">
                     <span
-                      className="font-mono-era text-[9px] uppercase leading-tight"
+                      className="font-mono-era text-[9px] uppercase leading-none"
                       style={{
                         letterSpacing: "2px",
                         color: yearColor,
@@ -201,19 +220,19 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
                       {year}
                     </span>
                     <span
-                      className="font-mono-era text-[9px] uppercase leading-tight"
+                      className="font-mono-era text-[10px] uppercase leading-none"
                       style={{
-                        letterSpacing: "1.5px",
+                        letterSpacing: "1.8px",
                         color: eraColor,
-                        fontWeight: eraWeight,
+                        fontWeight: isActive ? 600 : eraWeight,
                         transition: "color 0.4s ease",
                       }}
                     >
                       {era.label}
                     </span>
                     {isActive && (
-                      <div
-                        className="font-mono-era mt-0.5 text-[8px] leading-tight"
+                      <span
+                        className="font-mono-era mt-0.5 inline-flex w-fit items-center text-[8px] uppercase leading-none"
                         style={{
                           letterSpacing: "1px",
                           color: liveCss,
@@ -221,7 +240,7 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
                       >
                         [RECV]
                         <span ref={recvCursorRef}>_</span>
-                      </div>
+                      </span>
                     )}
                   </div>
                 </li>
