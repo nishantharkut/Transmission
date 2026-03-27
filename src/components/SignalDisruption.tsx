@@ -18,27 +18,18 @@ const SignalDisruption = forwardRef<SignalDisruptionHandle>((_props, ref) => {
 
       const overlay = overlayRef.current;
       const scan = scanRef.current;
-      const main = document.querySelector("main");
       if (!overlay || !scan) { running.current = false; return; }
 
       const tl = gsap.timeline({ onComplete: () => { running.current = false; } });
 
       // Scanline sweeps top to bottom
-      tl.set(scan, { opacity: 0.6, top: "0%" });
+      tl.set(scan, { opacity: 0.7, top: "0%" });
       tl.to(scan, { top: "100%", duration: 0.15, ease: "none" });
       tl.set(scan, { opacity: 0 });
 
-      // Micro horizontal displacement on main content
-      if (main) {
-        tl.to(main, { x: 4, duration: 0.03, ease: "none" }, 0);
-        tl.to(main, { x: -3, duration: 0.03, ease: "none" }, 0.03);
-        tl.to(main, { x: 2, duration: 0.03, ease: "none" }, 0.06);
-        tl.to(main, { x: 0, duration: 0.03, ease: "none" }, 0.09);
-      }
-
-      // Brief white flash
-      tl.to(overlay, { opacity: 0.04, duration: 0.05, ease: "none" }, 0);
-      tl.to(overlay, { opacity: 0, duration: 0.1, ease: "power1.out" }, 0.06);
+      // Brief white flash on overlay
+      tl.to(overlay, { opacity: 0.05, duration: 0.05, ease: "none" }, 0);
+      tl.to(overlay, { opacity: 0, duration: 0.12, ease: "power1.out" }, 0.06);
     },
   }));
 

@@ -246,14 +246,29 @@ export default function SectionDotCom() {
               </filter>
             </defs>
 
-            <line x1="0" y1="30" x2="300" y2="30" stroke="hsla(200,50%,50%,0.06)" strokeWidth="0.5" />
-            <line x1="0" y1="60" x2="300" y2="60" stroke="hsla(200,50%,50%,0.06)" strokeWidth="0.5" />
-            <line x1="0" y1="90" x2="300" y2="90" stroke="hsla(200,50%,50%,0.06)" strokeWidth="0.5" />
+            {/* Grid lines */}
+            <line x1="0" y1="30" x2="300" y2="30" stroke="hsla(200,50%,55%,0.1)" strokeWidth="0.5" />
+            <line x1="0" y1="60" x2="300" y2="60" stroke="hsla(200,50%,55%,0.1)" strokeWidth="0.5" />
+            <line x1="0" y1="90" x2="300" y2="90" stroke="hsla(200,50%,55%,0.1)" strokeWidth="0.5" />
 
-            {pathD && <path d={`${pathD} L ${endSvg.cx} 120 L ${CHART_POINTS[0][0] * 3} 120 Z`} fill="url(#chartFill)" />}
+            {/* Ghost line — full chart path always visible as faint guide */}
+            <path
+              d={CHART_POINTS.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0] * 3} ${p[1] * 1.5}`).join(" ")}
+              fill="none"
+              stroke="hsla(200,60%,55%,0.08)"
+              strokeWidth="1"
+              strokeDasharray="4 3"
+            />
 
+            {/* Gradient fill below active line */}
+            {pathD && endSvg.cx > 0 && (
+              <path d={`${pathD} L ${endSvg.cx} 120 L ${CHART_POINTS[0][0] * 3} 120 Z`} fill="url(#chartFill)" />
+            )}
+
+            {/* Active chart line */}
             <path d={pathD} fill="none" stroke="hsl(200 90% 55%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
 
+            {/* Endpoint with glow */}
             <circle cx={endSvg.cx} cy={endSvg.cy} r="5" fill="hsl(200 90% 55%)" filter="url(#dotGlow)" />
             <circle cx={endSvg.cx} cy={endSvg.cy} r="3" fill="hsl(200 95% 70%)" />
           </svg>

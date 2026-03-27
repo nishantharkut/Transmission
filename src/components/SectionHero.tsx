@@ -62,7 +62,7 @@ export default function SectionHero() {
     <section
       ref={sectionRef}
       data-era="arpanet"
-      className="relative flex min-h-dvh w-full max-w-[100%] flex-col items-center justify-center overflow-x-hidden px-4 sm:px-6"
+      className="relative flex min-h-dvh w-full max-w-[100%] flex-col items-center justify-center overflow-hidden px-4 sm:px-6"
       style={{ backgroundColor: "hsl(120 100% 3%)" }}
     >
       {/* ASCII network background — clip + min-w-0 prevents horizontal page scroll on narrow viewports */}
@@ -88,7 +88,7 @@ export default function SectionHero() {
 
       {/* Transmission log */}
       <div
-        className="relative z-10 mx-auto w-full min-w-0 max-w-[min(100%,480px)] overflow-x-hidden text-center font-mono-era text-[11px] leading-[1.85] sm:text-[12px] sm:leading-[2] md:text-[13px]"
+        className="relative z-10 mx-auto w-full min-w-0 max-w-[min(100%,480px)] overflow-hidden text-center font-mono-era text-[11px] leading-[1.85] sm:text-[12px] sm:leading-[2] md:text-[13px]"
         style={{ color: "hsl(142 80% 72%)" }}
       >
         <div className="hero-log-line">TRANSMISSION LOG</div>

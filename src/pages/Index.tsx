@@ -182,7 +182,7 @@ export default function Index() {
   }
 
   return (
-    <div className="relative overflow-x-hidden" style={{ backgroundColor: "hsl(var(--bg))" }}>
+    <div className="relative overflow-hidden" style={{ backgroundColor: "hsl(var(--bg))" }}>
       <SignalDisruption ref={disruptionRef} />
       <Navbar scrollProgress={scrollProgress} activeEra={activeEra} />
       <TimelineRail activeIndex={activeEra} scrollProgress={scrollProgress} />
