@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import RevealHeading from "@/components/RevealHeading";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -274,9 +275,13 @@ export default function SectionNow() {
         <p className="mt-2 text-center font-ui-era text-[15px] font-light sm:text-[18px]" style={{ color: "hsl(220 5% 52%)" }}>
           People on the internet right now.
         </p>
-        <p className="mt-6 max-w-[min(100%,520px)] text-center font-serif-era text-[18px] font-semibold italic leading-[1.4] sm:text-[20px] md:text-[22px]" style={{ color: "hsl(220 8% 92%)" }}>
-          All of them reached here through a message that lost its third letter in 1969.
-        </p>
+        <RevealHeading
+          text="All of them reached here through a message that lost its third letter in 1969."
+          as="p"
+          className="mt-6 max-w-[min(100%,520px)] text-center font-serif-era text-[18px] font-semibold italic sm:text-[20px] md:text-[22px]"
+          style={{ color: "hsl(220 8% 92%)", lineHeight: 1.4 }}
+          triggerStart="top 75%"
+        />
       </div>
 
       {/* Terminal recap — compact vertical timeline, centered as one unit (w-fit) */}

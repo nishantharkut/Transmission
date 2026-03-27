@@ -1,6 +1,7 @@
 import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import RevealHeading from "@/components/RevealHeading";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,10 +80,6 @@ export default function SectionDotCom() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".dotcom-quote", {
-        opacity: 0, y: 20, duration: 0.7,
-        scrollTrigger: { trigger: sectionRef.current, start: "top 60%" },
-      });
       gsap.from(".dotcom-facts > div", {
         opacity: 0, y: 15, stagger: 0.15, duration: 0.5,
         scrollTrigger: { trigger: ".dotcom-facts", start: "top 80%" },
@@ -188,12 +185,12 @@ export default function SectionDotCom() {
 
       <div className="relative z-10 mx-auto max-w-[720px] pt-11 sm:pt-14">
         {/* Pull quote */}
-        <h2
-          className="dotcom-quote mb-10 text-center font-serif-era text-[22px] font-bold italic leading-[1.15] sm:mb-16 sm:text-[26px] md:text-[48px]"
-          style={{ color: "hsl(200 20% 90%)" }}
-        >
-          $1.7 trillion in market value disappeared in 18 months. Then social media arrived, and everyone forgot.
-        </h2>
+        <RevealHeading
+          text="$1.7 trillion in market value disappeared in 18 months. Then social media arrived, and everyone forgot."
+          className="dotcom-quote mb-10 text-center font-serif-era text-[22px] font-bold italic sm:mb-16 sm:text-[26px] md:text-[48px]"
+          style={{ color: "hsl(200 20% 90%)", lineHeight: 1.15 }}
+          triggerStart="top 65%"
+        />
 
         {/* Bubble Meter */}
         <div className="relative mb-10 sm:mb-16">
@@ -235,8 +232,30 @@ export default function SectionDotCom() {
 
           {/* SVG Chart */}
           <svg viewBox="0 0 300 120" className="mb-4 h-[100px] w-full sm:h-[120px]" aria-label="NASDAQ bubble chart">
-            <path d={pathD} fill="none" stroke="hsl(200 90% 55%)" strokeWidth="2" />
-            <circle cx={endSvg.cx} cy={endSvg.cy} r="4" fill="hsl(200 90% 55%)" />
+            <defs>
+              <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(200 90% 55%)" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="hsl(200 90% 55%)" stopOpacity="0" />
+              </linearGradient>
+              <filter id="dotGlow">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            <line x1="0" y1="30" x2="300" y2="30" stroke="hsla(200,50%,50%,0.06)" strokeWidth="0.5" />
+            <line x1="0" y1="60" x2="300" y2="60" stroke="hsla(200,50%,50%,0.06)" strokeWidth="0.5" />
+            <line x1="0" y1="90" x2="300" y2="90" stroke="hsla(200,50%,50%,0.06)" strokeWidth="0.5" />
+
+            {pathD && <path d={`${pathD} L ${endSvg.cx} 120 L ${CHART_POINTS[0][0] * 3} 120 Z`} fill="url(#chartFill)" />}
+
+            <path d={pathD} fill="none" stroke="hsl(200 90% 55%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+            <circle cx={endSvg.cx} cy={endSvg.cy} r="5" fill="hsl(200 90% 55%)" filter="url(#dotGlow)" />
+            <circle cx={endSvg.cx} cy={endSvg.cy} r="3" fill="hsl(200 95% 70%)" />
           </svg>
 
           {/* Slider — Lenis smooth-scroll steals touchmove unless we opt this subtree out */}

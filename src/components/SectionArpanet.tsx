@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import RevealHeading from "@/components/RevealHeading";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,6 +21,10 @@ const STATS = [
 
 export default function SectionArpanet() {
   const sectionRef = useRef<HTMLElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const packet1 = useRef<SVGCircleElement>(null);
+  const packet2 = useRef<SVGCircleElement>(null);
+  const packet3 = useRef<SVGCircleElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -35,6 +40,32 @@ export default function SectionArpanet() {
         opacity: 0, duration: 0.3, stagger: 0.08,
         scrollTrigger: { trigger: ".arpanet-feed", start: "top 80%" },
       });
+
+      gsap.from(svgRef.current, {
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: { trigger: svgRef.current, start: "top 85%" },
+      });
+
+      if (packet1.current) {
+        gsap.fromTo(packet1.current,
+          { attr: { cx: 80, cy: 55 } },
+          { attr: { cx: 400, cy: 55 }, duration: 2.4, repeat: -1, ease: "none", delay: 0.2 }
+        );
+      }
+      if (packet2.current) {
+        gsap.fromTo(packet2.current,
+          { attr: { cx: 400, cy: 55 } },
+          { attr: { cx: 400, cy: 195 }, duration: 1.8, repeat: -1, ease: "none", delay: 0.8 }
+        );
+      }
+      if (packet3.current) {
+        gsap.fromTo(packet3.current,
+          { attr: { cx: 80, cy: 195 } },
+          { attr: { cx: 80, cy: 55 }, duration: 2.0, repeat: -1, ease: "none", delay: 1.4 }
+        );
+      }
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -47,12 +78,62 @@ export default function SectionArpanet() {
       style={{ backgroundColor: "hsl(120 100% 3%)" }}
     >
       {/* Narrative hook */}
-      <h2
-        className="font-serif-era mb-10 max-w-[640px] text-[26px] font-bold leading-[1.12] sm:mb-16 sm:text-[30px] md:text-[52px]"
+      <RevealHeading
+        text="The first engineers built a network that could survive a nuclear strike. They had no idea it would survive everything else instead."
+        className="font-serif-era mb-10 max-w-[640px] text-[26px] font-bold sm:mb-16 sm:text-[30px] md:text-[52px]"
         style={{ color: "hsl(142 80% 72%)", lineHeight: 1.1 }}
-      >
-        The first engineers built a network that could survive a nuclear strike. They had no idea it would survive everything else instead.
-      </h2>
+        triggerStart="top 78%"
+      />
+
+      {/* ARPANET topology — 4 original nodes */}
+      <div className="mb-10 flex justify-center sm:mb-14">
+        <svg
+          ref={svgRef}
+          viewBox="0 0 480 250"
+          className="w-full max-w-[520px]"
+          aria-label="Animated diagram of the original 4-node ARPANET network"
+        >
+          <defs>
+            <filter id="nodeGlow">
+              <feGaussianBlur stdDeviation="3.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="packetGlow">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <line x1="80" y1="55" x2="400" y2="55" stroke="hsla(142,55%,45%,0.18)" strokeWidth="1" strokeDasharray="6 4" />
+          <line x1="80" y1="55" x2="80" y2="195" stroke="hsla(142,55%,45%,0.18)" strokeWidth="1" strokeDasharray="6 4" />
+          <line x1="400" y1="55" x2="400" y2="195" stroke="hsla(142,55%,45%,0.18)" strokeWidth="1" strokeDasharray="6 4" />
+          <line x1="80" y1="195" x2="400" y2="195" stroke="hsla(142,55%,45%,0.18)" strokeWidth="1" strokeDasharray="6 4" />
+
+          <circle cx="80" cy="55" r="8" fill="hsl(142 85% 50%)" opacity="0.9" filter="url(#nodeGlow)" />
+          <circle cx="400" cy="55" r="8" fill="hsl(142 85% 50%)" opacity="0.9" filter="url(#nodeGlow)" />
+          <circle cx="80" cy="195" r="8" fill="hsl(142 85% 50%)" opacity="0.9" filter="url(#nodeGlow)" />
+          <circle cx="400" cy="195" r="8" fill="hsl(142 85% 50%)" opacity="0.9" filter="url(#nodeGlow)" />
+
+          <text x="80" y="80" textAnchor="middle" fill="hsl(142 40% 42%)" fontSize="10" fontFamily="var(--mono-font)">UCLA</text>
+          <text x="400" y="80" textAnchor="middle" fill="hsl(142 40% 42%)" fontSize="10" fontFamily="var(--mono-font)">SRI</text>
+          <text x="80" y="220" textAnchor="middle" fill="hsl(142 40% 42%)" fontSize="10" fontFamily="var(--mono-font)">UCSB</text>
+          <text x="400" y="220" textAnchor="middle" fill="hsl(142 40% 42%)" fontSize="10" fontFamily="var(--mono-font)">UTAH</text>
+
+          <circle ref={packet1} cx="80" cy="55" r="3" fill="hsl(142 90% 70%)" filter="url(#packetGlow)" />
+          <circle ref={packet2} cx="400" cy="55" r="3" fill="hsl(142 90% 70%)" filter="url(#packetGlow)" />
+          <circle ref={packet3} cx="80" cy="195" r="3" fill="hsl(142 90% 70%)" filter="url(#packetGlow)" />
+
+          <text x="240" y="130" textAnchor="middle" fill="hsl(142 30% 28%)" fontSize="9" fontFamily="var(--mono-font)" letterSpacing="3">
+            ARPANET 1969
+          </text>
+        </svg>
+      </div>
 
       {/* Two-column layout */}
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-16">

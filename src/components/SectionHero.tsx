@@ -1,18 +1,24 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function SectionHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const quoteRef = useRef<HTMLParagraphElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
+  const asciiRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".hero-log-line", {
         opacity: 0,
-        duration: 0.3,
-        stagger: 0.12,
+        y: 6,
+        duration: 0.35,
+        stagger: 0.1,
         delay: 0.3,
+        ease: "power2.out",
       });
 
       if (quoteRef.current) {
@@ -34,6 +40,19 @@ export default function SectionHero() {
       }
 
       gsap.from(".hero-scroll-indicator", { opacity: 0, delay: 3.8, duration: 0.6 });
+
+      if (asciiRef.current) {
+        gsap.to(asciiRef.current, {
+          yPercent: 20,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -48,11 +67,11 @@ export default function SectionHero() {
     >
       {/* ASCII network background — clip + min-w-0 prevents horizontal page scroll on narrow viewports */}
       <pre
+        ref={asciiRef}
         className="pointer-events-none absolute inset-0 min-w-0 overflow-hidden font-mono-era text-[6px] leading-[1.65] selection-none sm:text-[8px] md:text-[10px] md:leading-[1.8]"
         style={{
-          /* Was 0.06 — illegible on hsl(120 100% 3%); keep decorative but readable */
           color: "hsl(142 45% 62%)",
-          opacity: 0.2,
+          opacity: 0.28,
         }}
         aria-hidden="true"
       >

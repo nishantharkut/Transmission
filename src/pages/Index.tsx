@@ -13,6 +13,7 @@ import SectionMobile from "@/components/SectionMobile";
 import SectionWeb3 from "@/components/SectionWeb3";
 import SectionNow from "@/components/SectionNow";
 import SectionClosing from "@/components/SectionClosing";
+import SignalDisruption, { type SignalDisruptionHandle } from "@/components/SignalDisruption";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -60,19 +61,25 @@ function animateEraTransition(eraKey: EraKey) {
     signal: parseHSL(colors.signal),
   };
 
-  const current = {
-    bgH: parseFloat(getComputedStyle(root).getPropertyValue("--bg-h") || String(targets.bg.h)),
-    bgS: parseFloat(getComputedStyle(root).getPropertyValue("--bg-s") || String(targets.bg.s)),
-    bgL: parseFloat(getComputedStyle(root).getPropertyValue("--bg-l") || String(targets.bg.l)),
-    textH: parseFloat(getComputedStyle(root).getPropertyValue("--text-h") || String(targets.text.h)),
-    textS: parseFloat(getComputedStyle(root).getPropertyValue("--text-s") || String(targets.text.s)),
-    textL: parseFloat(getComputedStyle(root).getPropertyValue("--text-l") || String(targets.text.l)),
-    accentH: parseFloat(getComputedStyle(root).getPropertyValue("--accent-h") || String(targets.accent.h)),
-    accentS: parseFloat(getComputedStyle(root).getPropertyValue("--accent-s") || String(targets.accent.s)),
-    accentL: parseFloat(getComputedStyle(root).getPropertyValue("--accent-l") || String(targets.accent.l)),
+  const readHSL = (prop: string, fallback: { h: number; s: number; l: number }) => {
+    const raw = getComputedStyle(root).getPropertyValue(prop).trim();
+    if (!raw) return fallback;
+    const parts = raw.replace(/%/g, "").split(/\s+/).map(Number);
+    if (parts.length < 3 || parts.some(Number.isNaN)) return fallback;
+    return { h: parts[0], s: parts[1], l: parts[2] };
   };
 
-  const duration = eraKey === "web3" ? 1.0 : eraKey === "present" ? 1.4 : 1.2;
+  const curBg = readHSL("--bg", targets.bg);
+  const curText = readHSL("--text", targets.text);
+  const curAccent = readHSL("--accent", targets.accent);
+
+  const current = {
+    bgH: curBg.h, bgS: curBg.s, bgL: curBg.l,
+    textH: curText.h, textS: curText.s, textL: curText.l,
+    accentH: curAccent.h, accentS: curAccent.s, accentL: curAccent.l,
+  };
+
+  const duration = eraKey === "web3" ? 0.7 : eraKey === "present" ? 1.0 : 0.8;
   const ease = eraKey === "web3" ? "power2.in" : "power2.inOut";
 
   gsap.to(current, {
@@ -88,15 +95,6 @@ function animateEraTransition(eraKey: EraKey) {
     duration,
     ease,
     onUpdate: () => {
-      root.style.setProperty("--bg-h", String(current.bgH));
-      root.style.setProperty("--bg-s", String(current.bgS));
-      root.style.setProperty("--bg-l", String(current.bgL));
-      root.style.setProperty("--text-h", String(current.textH));
-      root.style.setProperty("--text-s", String(current.textS));
-      root.style.setProperty("--text-l", String(current.textL));
-      root.style.setProperty("--accent-h", String(current.accentH));
-      root.style.setProperty("--accent-s", String(current.accentS));
-      root.style.setProperty("--accent-l", String(current.accentL));
       root.style.setProperty("--bg", `${current.bgH} ${current.bgS}% ${current.bgL}%`);
       root.style.setProperty("--text", `${current.textH} ${current.textS}% ${current.textL}%`);
       root.style.setProperty("--text-dim", `${targets.textDim.h} ${targets.textDim.s}% ${targets.textDim.l}%`);
@@ -112,6 +110,7 @@ export default function Index() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeEra, setActiveEra] = useState(0);
   const lenisRef = useRef<Lenis | null>(null);
+  const disruptionRef = useRef<SignalDisruptionHandle>(null);
 
   const handlePreloaderComplete = useCallback(() => setLoaded(true), []);
 
@@ -157,10 +156,12 @@ export default function Index() {
         start: "top 50%",
         end: "bottom 50%",
         onEnter: () => {
+          disruptionRef.current?.fire();
           setActiveEra(index);
           animateEraTransition(key);
         },
         onEnterBack: () => {
+          disruptionRef.current?.fire();
           setActiveEra(index);
           animateEraTransition(key);
         },
@@ -182,6 +183,7 @@ export default function Index() {
 
   return (
     <div className="relative overflow-x-hidden" style={{ backgroundColor: "hsl(var(--bg))" }}>
+      <SignalDisruption ref={disruptionRef} />
       <Navbar scrollProgress={scrollProgress} activeEra={activeEra} />
       <TimelineRail activeIndex={activeEra} scrollProgress={scrollProgress} />
       <main>

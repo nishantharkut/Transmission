@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import RevealHeading from "@/components/RevealHeading";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -104,11 +105,11 @@ export default function SectionWeb3() {
       const mq = reducedMotion.current;
       const dur = (n: number) => (mq ? 0.01 : n);
 
-      gsap.from(act1.querySelectorAll(".web3-act1-quote, .web3-wallet-wrap"), {
-        y: (i) => (i === 0 ? 30 : 24),
+      gsap.from(act1.querySelectorAll(".web3-wallet-wrap"), {
+        y: 24,
         opacity: 0,
         duration: dur(0.7),
-        delay: (i) => (i === 0 ? 0 : 0.2),
+        delay: 0.2,
         ease: "power2.out",
         scrollTrigger: {
           trigger: section,
@@ -270,15 +271,17 @@ export default function SectionWeb3() {
           >
             ERA 4.5
           </p>
-          <blockquote
-            className="web3-act1-quote mx-auto mt-4 max-w-[680px] text-center font-serif-era text-[28px] font-bold italic leading-[1.1] sm:text-[46px]"
+          <RevealHeading
+            text="The internet forgot who built it. Web3 promised to remember."
+            as="blockquote"
+            className="web3-act1-quote mx-auto mt-4 max-w-[680px] text-center font-serif-era text-[28px] font-bold italic sm:text-[46px]"
             style={{
+              lineHeight: 1.1,
               fontVariationSettings: "'opsz' 72, 'wght' 700",
               color: "hsl(var(--text))",
             }}
-          >
-            The internet forgot who built it. Web3 promised to remember.
-          </blockquote>
+            triggerStart="top 78%"
+          />
 
           <div className="web3-wallet-wrap mx-auto mt-12 max-w-[420px]">
             {modalPhase === "error" ? (
