@@ -63,7 +63,7 @@ export default function SectionWeb1() {
         {/* Sub-state A: 1991 first website — actual recreation */}
         <div ref={stateARef} className="absolute inset-0 flex items-center justify-center px-3 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24">
           <div
-            className="w-full max-w-[660px] p-4 sm:p-8 md:p-12"
+            className="flex w-full max-w-[680px] min-h-[520px] flex-col p-4 sm:min-h-[560px] sm:p-8 md:p-12"
             style={{
               backgroundColor: "hsl(0 0% 96%)",
               border: "1px solid hsl(0 0% 82%)",
@@ -130,7 +130,7 @@ export default function SectionWeb1() {
               </li>
             </ul>
 
-            <div className="mt-6 pt-4 flex justify-between items-center" style={{ borderTop: "1px solid hsl(0 0% 82%)" }}>
+            <div className="mt-auto flex justify-between items-center pt-4" style={{ borderTop: "1px solid hsl(0 0% 82%)" }}>
               <span className="font-mono-era text-[10px]" style={{ color: "hsl(0 0% 55%)" }}>
                 Tim Berners-Lee · CERN
               </span>
@@ -143,10 +143,10 @@ export default function SectionWeb1() {
 
         {/* Sub-state B: Netscape era ~1994 */}
         <div ref={stateBRef} className="absolute inset-0 flex items-center justify-center px-2 pb-8 pt-20 sm:px-6 sm:pb-12 sm:pt-24" style={{ opacity: 0 }}>
-          <div className="w-full max-w-[700px] min-w-0">
+          <div className="flex min-h-[520px] w-full max-w-[680px] min-w-0 flex-col sm:min-h-[560px]">
             {/* Window chrome */}
             <div
-              className="px-3 py-2 flex items-center gap-2"
+              className="flex shrink-0 items-center gap-2 px-3 py-2"
               style={{
                 backgroundColor: "hsl(220 10% 78%)",
                 borderTopLeftRadius: 4,
@@ -166,7 +166,7 @@ export default function SectionWeb1() {
 
             {/* Toolbar */}
             <div
-              className="flex flex-wrap items-center gap-x-2 gap-y-1 px-2 py-1.5 sm:gap-x-3 sm:px-3"
+              className="flex shrink-0 flex-wrap items-center gap-x-2 gap-y-1 px-2 py-1.5 sm:gap-x-3 sm:px-3"
               style={{
                 backgroundColor: "hsl(220 10% 82%)",
                 borderBottom: "1px solid hsl(220 10% 70%)",
@@ -179,7 +179,7 @@ export default function SectionWeb1() {
 
             {/* Location bar */}
             <div
-              className="flex min-w-0 items-center gap-2 px-2 py-1.5 sm:px-3"
+              className="flex min-w-0 shrink-0 items-center gap-2 px-2 py-1.5 sm:px-3"
               style={{
                 backgroundColor: "hsl(220 10% 82%)",
                 borderBottom: "2px solid hsl(220 10% 65%)",
@@ -193,7 +193,7 @@ export default function SectionWeb1() {
 
             {/* Content area */}
             <div
-              className="p-3 sm:p-6"
+              className="min-h-0 flex-1 p-3 sm:p-6"
               style={{
                 backgroundColor: "hsl(220 8% 88%)",
                 backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23bbb'/%3E%3C/svg%3E\")",
@@ -284,7 +284,7 @@ export default function SectionWeb1() {
         {/* Sub-state C: 1999 portal era */}
         <div ref={stateCRef} className="absolute inset-0 flex items-center justify-center px-3 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24" style={{ opacity: 0 }}>
           <div
-            className="w-full max-w-[680px] min-w-0 p-4 sm:p-8"
+            className="flex min-h-[520px] w-full max-w-[680px] min-w-0 flex-col p-4 sm:min-h-[560px] sm:p-8"
             style={{
               backgroundColor: "hsl(215 50% 12%)",
               border: "1px solid hsl(200 40% 25%)",
@@ -293,7 +293,7 @@ export default function SectionWeb1() {
             }}
           >
             {/* Portal header */}
-            <div className="text-center mb-8">
+            <div className="mb-6 shrink-0 text-center sm:mb-8">
               <h2
                 className="font-display-era text-[26px] font-bold sm:text-[30px] md:text-[36px]"
                 style={{
@@ -335,7 +335,7 @@ export default function SectionWeb1() {
             </div>
 
             {/* Category grid */}
-            <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-8">
+            <div className="grid min-h-0 flex-1 grid-cols-2 content-start gap-x-8 gap-y-2 pb-4">
               {[
                 "Arts & Humanities", "News & Media",
                 "Business & Economy", "Recreation & Sports",
@@ -359,21 +359,21 @@ export default function SectionWeb1() {
               ))}
             </div>
 
-            {/* Bottom links */}
-            <div className="flex flex-wrap gap-4 justify-center pt-4" style={{ borderTop: "1px solid hsl(200 30% 22%)" }}>
-              {["Yahoo! Mail", "Yahoo! Games", "Yahoo! Finance", "My Yahoo!"].map((link) => (
-                <span
-                  key={link}
-                  className="text-[11px] font-ui-era font-medium"
-                  style={{ color: "hsl(180 60% 55%)", cursor: "pointer" }}
-                >
-                  {link}
-                </span>
-              ))}
-            </div>
-
-            <div className="text-center font-mono-era text-[11px] mt-5" style={{ color: "hsl(200 15% 38%)" }}>
-              1999
+            <div className="mt-auto shrink-0">
+              <div className="flex flex-wrap justify-center gap-4 border-t pt-4" style={{ borderColor: "hsl(200 30% 22%)" }}>
+                {["Yahoo! Mail", "Yahoo! Games", "Yahoo! Finance", "My Yahoo!"].map((link) => (
+                  <span
+                    key={link}
+                    className="text-[11px] font-ui-era font-medium"
+                    style={{ color: "hsl(180 60% 55%)", cursor: "pointer" }}
+                  >
+                    {link}
+                  </span>
+                ))}
+              </div>
+              <div className="pt-2 text-center font-mono-era text-[11px]" style={{ color: "hsl(200 15% 38%)" }}>
+                1999
+              </div>
             </div>
           </div>
         </div>
