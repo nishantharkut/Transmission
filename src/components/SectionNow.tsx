@@ -259,11 +259,11 @@ export default function SectionNow() {
     <section
       ref={sectionRef}
       data-era="present"
-      className="py-16 md:py-[120px]"
+      className="pt-14 pb-16 md:pt-20 md:pb-[120px]"
       style={{ backgroundColor: "hsl(220 18% 7%)" }}
     >
       {/* Counter */}
-      <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 sm:min-h-[60vh] sm:px-6">
+      <div className="flex flex-col items-center px-4 pt-2 sm:px-6 md:pt-4">
         <div
           ref={counterRef}
           className="font-mono-era text-[34px] font-bold tabular-nums text-signal sm:text-[52px] md:text-[80px] lg:text-[96px]"

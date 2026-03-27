@@ -256,7 +256,7 @@ export default function SectionWeb3() {
     <section
       ref={sectionRef}
       data-era="web3"
-      className="min-h-screen py-[100px] pb-20"
+      className="min-h-screen py-[100px] pb-16"
       style={{
         background: `radial-gradient(ellipse 65% 45% at 50% 25%, hsla(252, 55%, 45%, 0.055), transparent 70%), hsl(var(--bg))`,
       }}
