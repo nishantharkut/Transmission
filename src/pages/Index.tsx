@@ -188,12 +188,19 @@ export default function Index() {
       <TimelineRail activeIndex={activeEra} scrollProgress={scrollProgress} />
       <main>
         <SectionHero />
+        {/* Hero & ARPANET are same color — no gradient needed */}
         <SectionArpanet />
+        <div className="h-20" style={{ background: "linear-gradient(to bottom, hsl(120 100% 3%), hsl(40 15% 94%))" }} />
         <SectionWeb1 />
+        <div className="h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }} />
         <SectionDotCom />
+        <div className="h-20" style={{ background: "linear-gradient(to bottom, hsl(215 40% 10%), hsl(0 0% 97%))" }} />
         <SectionMobile />
+        <div className="h-20" style={{ background: "linear-gradient(to bottom, hsl(0 0% 97%), hsl(252 22% 7%))" }} />
         <SectionWeb3 />
+        <div className="h-16" style={{ background: "linear-gradient(to bottom, hsl(252 22% 7%), hsl(220 18% 9%))" }} />
         <SectionNow />
+        <div className="h-12" style={{ background: "linear-gradient(to bottom, hsl(220 18% 9%), hsl(220 14% 11%))" }} />
         <SectionClosing />
       </main>
     </div>

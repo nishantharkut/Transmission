@@ -382,8 +382,8 @@ export default function SectionWeb3() {
           </div>
 
           <p
-            className="font-ui-era mt-7 text-center text-[13px] font-light italic"
-            style={{ color: "hsl(var(--text-dim))" }}
+            className="font-serif-era mt-7 text-center text-[17px] font-bold italic sm:text-[19px] md:text-[22px] leading-snug"
+            style={{ color: "hsl(var(--text))" }}
           >
             This was the onboarding experience for a $3 trillion market.
           </p>
@@ -521,12 +521,13 @@ export default function SectionWeb3() {
           </div>
         </div>
 
-        <blockquote
-          className="mx-auto mt-12 max-w-[560px] text-center font-serif-era text-[24px] font-semibold italic leading-[1.4]"
-          style={{ fontVariationSettings: "'opsz' 72, 'wght' 600", color: "hsl(var(--text))" }}
-        >
-          The code worked. The wallets connected eventually. The blocks kept coming. The promise just never arrived for most people.
-        </blockquote>
+        <RevealHeading
+          text="The code worked. The wallets connected eventually. The blocks kept coming. The promise just never arrived for most people."
+          as="blockquote"
+          className="mx-auto mt-12 max-w-[560px] text-center font-serif-era text-[24px] font-semibold italic"
+          style={{ lineHeight: 1.4, fontVariationSettings: "'opsz' 72, 'wght' 600", color: "hsl(var(--text))" }}
+          triggerStart="top 78%"
+        />
         <p
           className="font-mono-era mt-4 text-center text-[11px] font-medium tracking-[3px]"
           style={{ color: "hsl(var(--accent))" }}

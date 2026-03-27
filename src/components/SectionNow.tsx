@@ -261,7 +261,7 @@ export default function SectionNow() {
       ref={sectionRef}
       data-era="present"
       className="pt-14 pb-16 md:pt-20 md:pb-[120px]"
-      style={{ backgroundColor: "hsl(220 18% 7%)" }}
+      style={{ backgroundColor: "hsl(220 18% 9%)" }}
     >
       {/* Counter */}
       <div className="flex flex-col items-center px-4 pt-2 sm:px-6 md:pt-4">

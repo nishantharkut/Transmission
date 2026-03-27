@@ -41,12 +41,16 @@ export default function SectionArpanet() {
         scrollTrigger: { trigger: ".arpanet-feed", start: "top 80%" },
       });
 
-      gsap.from(svgRef.current, {
-        opacity: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: { trigger: svgRef.current, start: "top 85%" },
-      });
+      gsap.fromTo(
+        svgRef.current,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: { trigger: svgRef.current, start: "top 85%" },
+        }
+      );
 
       if (packet1.current) {
         gsap.fromTo(packet1.current,
@@ -92,6 +96,7 @@ export default function SectionArpanet() {
             viewBox="0 0 480 250"
             className="w-full max-w-[420px] md:max-w-[460px] lg:max-w-[520px]"
             aria-label="Animated diagram of the original 4-node ARPANET network"
+            style={{ opacity: 0 }}
           >
           <defs>
             <filter id="nodeGlow">

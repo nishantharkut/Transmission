@@ -234,7 +234,7 @@ export default function SectionDotCom() {
           <svg viewBox="0 0 300 120" className="mb-4 h-[100px] w-full sm:h-[120px]" aria-label="NASDAQ bubble chart">
             <defs>
               <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(200 90% 55%)" stopOpacity="0.2" />
+                <stop offset="0%" stopColor="hsl(200 90% 55%)" stopOpacity="0.28" />
                 <stop offset="100%" stopColor="hsl(200 90% 55%)" stopOpacity="0" />
               </linearGradient>
               <filter id="dotGlow">
@@ -255,7 +255,7 @@ export default function SectionDotCom() {
             <path
               d={CHART_POINTS.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0] * 3} ${p[1] * 1.5}`).join(" ")}
               fill="none"
-              stroke="hsla(200,60%,55%,0.08)"
+              stroke="hsla(200,60%,55%,0.13)"
               strokeWidth="1"
               strokeDasharray="4 3"
             />
