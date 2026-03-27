@@ -385,6 +385,13 @@ export default function SectionNow() {
 
       {/* Canvas network */}
       <div className="mt-6 px-4 sm:mt-10 sm:px-6">
+        <p
+          className="mb-3 text-center font-mono-era text-[8px] tracking-[2px] sm:mb-4 sm:text-[9px]"
+          style={{ color: "hsl(220 8% 35%)" }}
+        >
+          <span className="hidden sm:inline">MOVE YOUR CURSOR TO JOIN THE NETWORK</span>
+          <span className="sm:hidden">TAP AND DRAG TO JOIN THE NETWORK</span>
+        </p>
         <canvas
           ref={canvasRef}
           className="h-[min(55vh,360px)] w-full touch-none sm:h-[min(55vh,380px)] md:h-[60vh]"

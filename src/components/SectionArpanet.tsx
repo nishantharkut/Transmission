@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import RevealHeading from "@/components/RevealHeading";
@@ -25,6 +25,9 @@ export default function SectionArpanet() {
   const packet1 = useRef<SVGCircleElement>(null);
   const packet2 = useRef<SVGCircleElement>(null);
   const packet3 = useRef<SVGCircleElement>(null);
+  const [visibleEvents, setVisibleEvents] = useState(0);
+  const feedTriggered = useRef(false);
+  const feedInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -36,9 +39,34 @@ export default function SectionArpanet() {
         x: 30, opacity: 0, duration: 0.7, ease: "power2.out",
         scrollTrigger: { trigger: sectionRef.current, start: "top 75%" },
       });
-      gsap.from(".arpanet-event", {
-        opacity: 0, duration: 0.3, stagger: 0.08,
-        scrollTrigger: { trigger: ".arpanet-feed", start: "top 80%" },
+      // Typewriter feed — events appear one by one after feed box slides in
+      ScrollTrigger.create({
+        trigger: ".arpanet-feed",
+        start: "top 80%",
+        once: true,
+        onEnter: () => {
+          if (feedTriggered.current) return;
+          feedTriggered.current = true;
+
+          const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          if (reduced) {
+            setVisibleEvents(EVENTS.length);
+            return;
+          }
+
+          // Wait for feed box slide-in animation (0.7s) before typing
+          setTimeout(() => {
+            let count = 0;
+            feedInterval.current = setInterval(() => {
+              count++;
+              setVisibleEvents(count);
+              if (count >= EVENTS.length) {
+                if (feedInterval.current) clearInterval(feedInterval.current);
+                feedInterval.current = null;
+              }
+            }, 350);
+          }, 700);
+        },
       });
 
       gsap.fromTo(
@@ -71,7 +99,10 @@ export default function SectionArpanet() {
         );
       }
     }, sectionRef);
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      if (feedInterval.current) clearInterval(feedInterval.current);
+    };
   }, []);
 
   return (
@@ -144,14 +175,17 @@ export default function SectionArpanet() {
       {/* Two-column layout */}
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-16">
         {/* Left: Transmission feed */}
-        <div className="arpanet-left arpanet-feed border p-4 sm:p-6" style={{ borderColor: "hsla(142, 90%, 60%, 0.12)" }}>
-          {EVENTS.map((evt, i) => (
-            <div key={i} className="arpanet-event font-mono-era text-[11px] leading-[1.85] sm:text-[12px] sm:leading-[2]">
+        <div
+          className="arpanet-left arpanet-feed border p-4 sm:p-6"
+          style={{ borderColor: "hsla(142, 90%, 60%, 0.12)", minHeight: 120 }}
+        >
+          {EVENTS.slice(0, visibleEvents).map((evt, i) => (
+            <div key={i} className="font-mono-era text-[11px] leading-[1.85] sm:text-[12px] sm:leading-[2]">
               <span style={{ color: "hsl(142 40% 40%)" }}>{evt.date}  </span>
               <span style={{ color: "hsl(142 80% 72%)" }}>{evt.text}</span>
             </div>
           ))}
-          <span className="preloader-cursor font-mono-era text-signal text-xs mt-2 inline-block">_</span>
+          <span className="preloader-cursor font-mono-era text-signal text-xs mt-1 inline-block">_</span>
         </div>
 
         {/* Right: Stats */}
