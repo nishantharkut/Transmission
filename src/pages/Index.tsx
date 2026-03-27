@@ -79,7 +79,7 @@ function animateEraTransition(eraKey: EraKey) {
     accentH: curAccent.h, accentS: curAccent.s, accentL: curAccent.l,
   };
 
-  const duration = eraKey === "web3" ? 0.7 : eraKey === "present" ? 1.0 : 0.8;
+  const duration = eraKey === "web3" ? 0.3 : eraKey === "present" ? 0.4 : 0.35;
   const ease = eraKey === "web3" ? "power2.in" : "power2.inOut";
 
   gsap.to(current, {
@@ -154,8 +154,8 @@ export default function Index() {
       if (!el) return;
       ScrollTrigger.create({
         trigger: el,
-        start: "top 50%",
-        end: "bottom 50%",
+        start: "top 65%",
+        end: "bottom 35%",
         onEnter: () => {
           disruptionRef.current?.fire();
           setActiveEra(index);
@@ -179,6 +179,10 @@ export default function Index() {
         onLeaveBack: () => setShowRail(false),
       });
     }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    });
 
     const onResize = () => ScrollTrigger.refresh();
     window.addEventListener("resize", onResize);
@@ -204,7 +208,16 @@ export default function Index() {
         <SectionArpanet />
         <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(120 100% 3%), hsl(40 15% 94%))" }} />
         <SectionWeb1 />
-        <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }} />
+        <div className="relative h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }}>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <span className="font-mono-era block text-[7px] font-bold tracking-[3px] sm:text-[8px]" style={{ color: "hsl(0 0% 8%)" }}>
+                TRANSMISSION CONTINUES
+              </span>
+              <span className="preloader-cursor mt-1 block text-[10px]" style={{ color: "hsl(0 0% 8%)" }}>▼</span>
+            </div>
+          </div>
+        </div>
         <SectionDotCom />
         <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(215 40% 10%), hsl(0 0% 97%))" }} />
         <SectionMobile />

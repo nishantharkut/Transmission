@@ -111,12 +111,8 @@ export default function Navbar({ scrollProgress, activeEra }: NavbarProps) {
         TRANSMISSION
       </span>
       <span
-        className={cn(
-          "font-mono-era hidden sm:block tabular-nums tracking-tight",
-          isWwwEra
-            ? "text-[12px] font-medium text-[hsl(220_12%_92%)] [text-shadow:0_1px_2px_hsla(0,0%,0%,0.85)]"
-            : "text-[11px] font-normal text-navbar-dim"
-        )}
+        className="font-mono-era hidden sm:block text-[11px] font-normal tabular-nums tracking-tight"
+        style={{ color: "hsl(220 10% 68%)" }}
       >
         PKT #{String(packetNum).padStart(9, "0")} · {dateStr}
       </span>

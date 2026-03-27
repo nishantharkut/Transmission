@@ -25,12 +25,12 @@ function hsla(e: { h: number; s: number; l: number }, alpha: number) {
 }
 
 const ERAS = [
-  { year: "1969", label: "ARPANET" },
-  { year: "1991", label: "WWW" },
-  { year: "2000", label: "DOT-COM" },
-  { year: "2012", label: "MOBILE" },
-  { year: "2014", label: "WEB3" },
-  { year: "", label: "NOW" },
+  { year: "1969", label: "ARPANET", era: "arpanet" },
+  { year: "1991", label: "WWW", era: "web1" },
+  { year: "2000", label: "DOT-COM", era: "web2" },
+  { year: "2012", label: "MOBILE", era: "mobile" },
+  { year: "2014", label: "WEB3", era: "web3" },
+  { year: "", label: "NOW", era: "present" },
 ] as const;
 
 /** Logged past — always dim phosphor */
@@ -66,6 +66,14 @@ export default function TimelineRail({ activeIndex, scrollProgress, visible = tr
   const activeEra = ERAS[activeIndex] ?? ERAS[0];
   const activeYear = activeIndex === ERAS.length - 1 ? presentYear : activeEra.year;
   const mobileLabelText = `${activeYear} · ${activeEra.label}`;
+
+  const scrollToEra = (eraKey: string) => {
+    const sections = document.querySelectorAll(`[data-era='${eraKey}']`);
+    const target = eraKey === "arpanet" && sections.length > 1 ? sections[1] : sections[0];
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   useEffect(() => {
     const el = recvCursorRef.current;
@@ -166,7 +174,7 @@ export default function TimelineRail({ activeIndex, scrollProgress, visible = tr
               return (
                 <li
                   key={key}
-                  className="relative flex items-center rounded-[10px] py-[8px]"
+                  className="relative flex cursor-pointer items-center rounded-[10px] py-[8px]"
                   style={{
                     paddingLeft: 20,
                     background: isActive ? livePanel : hovered ? "hsla(220, 10%, 100%, 0.02)" : "transparent",
@@ -176,6 +184,7 @@ export default function TimelineRail({ activeIndex, scrollProgress, visible = tr
                   aria-current={isActive ? "true" : undefined}
                   onMouseEnter={() => setHoverIndex(i)}
                   onMouseLeave={() => setHoverIndex(null)}
+                  onClick={() => scrollToEra(era.era)}
                 >
                   {isActive && (
                     <span
