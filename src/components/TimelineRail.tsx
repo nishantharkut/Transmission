@@ -49,9 +49,10 @@ const MOBILE_FILL = "hsl(142 70% 55%)";
 interface TimelineRailProps {
   activeIndex: number;
   scrollProgress: number;
+  visible?: boolean;
 }
 
-export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRailProps) {
+export default function TimelineRail({ activeIndex, scrollProgress, visible = true }: TimelineRailProps) {
   const presentYear = String(new Date().getFullYear());
   const recvCursorRef = useRef<HTMLSpanElement>(null);
   const mobileLabelRef = useRef<HTMLParagraphElement>(null);
@@ -83,9 +84,9 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
 
   useEffect(() => {
     const el = mobileLabelRef.current;
-    if (!el) return;
+    if (!el || !visible) return;
     gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-  }, [activeIndex]);
+  }, [activeIndex, visible]);
 
   return (
     <>
@@ -93,6 +94,7 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
       <nav
         className="pointer-events-auto fixed left-5 top-1/2 z-50 hidden w-[124px] -translate-y-1/2 flex-col md:flex"
         aria-label="Transmission frequency bands"
+        style={{ opacity: visible ? 1 : 0, transition: "opacity 0.4s ease", pointerEvents: visible ? "auto" : "none" }}
       >
         <div className="relative flex w-full flex-col py-2">
           {/* Track + scroll fill */}
@@ -255,6 +257,8 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
         className="pointer-events-none fixed bottom-0 left-0 right-0 z-[100] h-0.5 md:hidden"
         style={{
           background: TRACK_BASE,
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.4s ease",
         }}
       >
         <div
@@ -272,6 +276,8 @@ export default function TimelineRail({ activeIndex, scrollProgress }: TimelineRa
         style={{
           color: "hsl(var(--text-ghost))",
           bottom: "max(8px, env(safe-area-inset-bottom, 0px))",
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.4s ease",
         }}
       >
         {mobileLabelText}

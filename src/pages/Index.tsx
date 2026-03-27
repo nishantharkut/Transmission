@@ -109,6 +109,7 @@ export default function Index() {
   const [loaded, setLoaded] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeEra, setActiveEra] = useState(0);
+  const [showRail, setShowRail] = useState(false);
   const lenisRef = useRef<Lenis | null>(null);
   const disruptionRef = useRef<SignalDisruptionHandle>(null);
 
@@ -168,6 +169,17 @@ export default function Index() {
       });
     });
 
+    // Show timeline rail only after Hero — second arpanet element is SectionArpanet (first is Hero)
+    const arpanetSections = document.querySelectorAll("[data-era='arpanet']");
+    if (arpanetSections[1]) {
+      ScrollTrigger.create({
+        trigger: arpanetSections[1],
+        start: "top 85%",
+        onEnter: () => setShowRail(true),
+        onLeaveBack: () => setShowRail(false),
+      });
+    }
+
     const onResize = () => ScrollTrigger.refresh();
     window.addEventListener("resize", onResize);
 
@@ -185,22 +197,22 @@ export default function Index() {
     <div className="relative overflow-hidden" style={{ backgroundColor: "hsl(var(--bg))" }}>
       <SignalDisruption ref={disruptionRef} />
       <Navbar scrollProgress={scrollProgress} activeEra={activeEra} />
-      <TimelineRail activeIndex={activeEra} scrollProgress={scrollProgress} />
+      <TimelineRail activeIndex={activeEra} scrollProgress={scrollProgress} visible={showRail} />
       <main>
         <SectionHero />
         {/* Hero & ARPANET are same color — no gradient needed */}
         <SectionArpanet />
-        <div className="h-20" style={{ background: "linear-gradient(to bottom, hsl(120 100% 3%), hsl(40 15% 94%))" }} />
+        <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(120 100% 3%), hsl(40 15% 94%))" }} />
         <SectionWeb1 />
-        <div className="h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }} />
+        <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }} />
         <SectionDotCom />
-        <div className="h-20" style={{ background: "linear-gradient(to bottom, hsl(215 40% 10%), hsl(0 0% 97%))" }} />
+        <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(215 40% 10%), hsl(0 0% 97%))" }} />
         <SectionMobile />
-        <div className="h-20" style={{ background: "linear-gradient(to bottom, hsl(0 0% 97%), hsl(252 22% 7%))" }} />
+        <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(0 0% 97%), hsl(252 22% 7%))" }} />
         <SectionWeb3 />
-        <div className="h-16" style={{ background: "linear-gradient(to bottom, hsl(252 22% 7%), hsl(220 18% 9%))" }} />
+        <div className="h-20 sm:h-16" style={{ background: "linear-gradient(to bottom, hsl(252 22% 7%), hsl(220 18% 9%))" }} />
         <SectionNow />
-        <div className="h-12" style={{ background: "linear-gradient(to bottom, hsl(220 18% 9%), hsl(220 14% 11%))" }} />
+        <div className="h-16 sm:h-12" style={{ background: "linear-gradient(to bottom, hsl(220 18% 9%), hsl(220 14% 11%))" }} />
         <SectionClosing />
       </main>
     </div>
