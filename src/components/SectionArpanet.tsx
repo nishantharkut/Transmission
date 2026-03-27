@@ -77,22 +77,22 @@ export default function SectionArpanet() {
       className="mx-auto max-w-[1080px] px-4 py-16 sm:px-6 md:py-[120px]"
       style={{ backgroundColor: "hsl(120 100% 3%)" }}
     >
-      {/* Narrative hook */}
-      <RevealHeading
-        text="The first engineers built a network that could survive a nuclear strike. They had no idea it would survive everything else instead."
-        className="font-serif-era mb-10 max-w-[640px] text-[26px] font-bold sm:mb-16 sm:text-[30px] md:text-[52px]"
-        style={{ color: "hsl(142 80% 72%)", lineHeight: 1.1 }}
-        triggerStart="top 78%"
-      />
+      {/* Narrative hook + topology — side by side on md+ */}
+      <div className="mb-10 grid grid-cols-1 items-center gap-8 sm:gap-10 md:mb-14 md:grid-cols-2 md:gap-8 lg:gap-12">
+        <RevealHeading
+          text="The first engineers built a network that could survive a nuclear strike. They had no idea it would survive everything else instead."
+          className="font-serif-era max-w-[640px] justify-self-start text-[24px] font-bold sm:text-[28px] md:max-w-none md:text-[32px] lg:text-[40px] xl:text-[48px]"
+          style={{ color: "hsl(142 80% 72%)", lineHeight: 1.1 }}
+          triggerStart="top 78%"
+        />
 
-      {/* ARPANET topology — 4 original nodes */}
-      <div className="mb-10 flex justify-center sm:mb-14">
-        <svg
-          ref={svgRef}
-          viewBox="0 0 480 250"
-          className="w-full max-w-[520px]"
-          aria-label="Animated diagram of the original 4-node ARPANET network"
-        >
+        <div className="flex min-w-0 justify-center md:justify-end">
+          <svg
+            ref={svgRef}
+            viewBox="0 0 480 250"
+            className="w-full max-w-[420px] md:max-w-[460px] lg:max-w-[520px]"
+            aria-label="Animated diagram of the original 4-node ARPANET network"
+          >
           <defs>
             <filter id="nodeGlow">
               <feGaussianBlur stdDeviation="3.5" result="blur" />
@@ -132,7 +132,8 @@ export default function SectionArpanet() {
           <text x="240" y="130" textAnchor="middle" fill="hsl(142 30% 28%)" fontSize="9" fontFamily="var(--mono-font)" letterSpacing="3">
             ARPANET 1969
           </text>
-        </svg>
+          </svg>
+        </div>
       </div>
 
       {/* Two-column layout */}
