@@ -382,7 +382,7 @@ export default function SectionNow() {
       <div className="mt-6 px-4 sm:mt-10 sm:px-6">
         <canvas
           ref={canvasRef}
-          className="h-[min(42vh,260px)] w-full touch-none sm:h-[min(48vh,340px)] md:h-[60vh]"
+          className="h-[min(55vh,360px)] w-full touch-none sm:h-[min(55vh,380px)] md:h-[60vh]"
           aria-label="Interactive network visualization. Move your finger or cursor to become a node in the network."
           role="img"
         />

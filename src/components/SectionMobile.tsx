@@ -17,12 +17,12 @@ const APP_ICONS = [
 ];
 
 const FEED_ITEMS = [
-  { name: "Sarah Chen", handle: "@sarchen", text: "Just redesigned our entire product in flat design. Skeuomorphism is dead 💀", time: "2m", lines: 2 },
-  { name: "Marcus Webb", handle: "@mwebb", text: "10 million downloads in the first weekend. The app store changed everything.", time: "8m", lines: 2 },
-  { name: "Lena Torres", handle: "@lenatorres", text: "Swipe right, swipe left. The gesture is the interface now.", time: "14m", lines: 1 },
-  { name: "David Park", handle: "@dpark", text: "Your phone knows where you are, who you're with, and what you want for dinner. Is that convenient or terrifying?", time: "22m", lines: 3 },
-  { name: "Amara Osei", handle: "@amarao", text: "Stories disappear in 24 hours. But the attention is permanent.", time: "31m", lines: 1 },
-  { name: "Jin Tanaka", handle: "@jint", text: "We don't scroll anymore. The feed scrolls us.", time: "45m", lines: 1 },
+  { name: "Sarah Chen", handle: "@sarchen", text: "Just redesigned our entire product in flat design. Skeuomorphism is dead 💀", time: "2m", lines: 2, likes: 147, retweets: 23, saves: 8 },
+  { name: "Marcus Webb", handle: "@mwebb", text: "10 million downloads in the first weekend. The app store changed everything.", time: "8m", lines: 2, likes: 89, retweets: 12, saves: 3 },
+  { name: "Lena Torres", handle: "@lenatorres", text: "Swipe right, swipe left. The gesture is the interface now.", time: "14m", lines: 1, likes: 203, retweets: 31, saves: 11 },
+  { name: "David Park", handle: "@dpark", text: "Your phone knows where you are, who you're with, and what you want for dinner. Is that convenient or terrifying?", time: "22m", lines: 3, likes: 56, retweets: 8, saves: 4 },
+  { name: "Amara Osei", handle: "@amarao", text: "Stories disappear in 24 hours. But the attention is permanent.", time: "31m", lines: 1, likes: 178, retweets: 42, saves: 15 },
+  { name: "Jin Tanaka", handle: "@jint", text: "We don't scroll anymore. The feed scrolls us.", time: "45m", lines: 1, likes: 312, retweets: 67, saves: 9 },
 ];
 
 export default function SectionMobile() {
@@ -85,14 +85,14 @@ export default function SectionMobile() {
         className="relative flex min-h-dvh items-center"
         style={{ backgroundColor: "hsl(0 0% 97%)" }}
       >
-        <div className="mx-auto grid w-full max-w-[1080px] grid-cols-1 items-center gap-10 px-4 py-8 md:grid-cols-2 md:gap-16 md:py-0 sm:px-6">
+        <div className="mx-auto grid w-full max-w-[1080px] grid-cols-1 items-center gap-4 px-4 py-4 sm:gap-10 sm:py-8 md:grid-cols-2 md:gap-16 md:py-0 sm:px-6">
           {/* Left text */}
           <div>
             <div className="font-mono-era text-[10px] mb-4" style={{ color: "hsl(0 0% 60%)", letterSpacing: "2px" }}>
               ERA 04 · MOBILE & SOCIAL
             </div>
             <h2
-              className="font-serif-era font-semibold text-[22px] md:text-[36px] leading-[1.2] mb-6"
+              className="font-serif-era font-semibold text-[20px] sm:text-[22px] md:text-[36px] leading-[1.15] mb-3 sm:mb-6"
               style={{ color: "hsl(0 0% 13%)" }}
             >
               The phone became the web. The feed became the thought.
@@ -237,9 +237,9 @@ export default function SectionMobile() {
                         </p>
                         {/* Engagement row */}
                         <div className="flex items-center gap-4 mt-1.5">
-                          <span className="text-[9px]" style={{ color: "hsl(0 0% 55%)" }}>♡ {Math.floor(Math.random() * 200 + 10)}</span>
-                          <span className="text-[9px]" style={{ color: "hsl(0 0% 55%)" }}>↺ {Math.floor(Math.random() * 40 + 2)}</span>
-                          <span className="text-[9px]" style={{ color: "hsl(0 0% 55%)" }}>◩ {Math.floor(Math.random() * 15 + 1)}</span>
+                          <span className="text-[9px]" style={{ color: "hsl(0 0% 55%)" }}>♡ {item.likes}</span>
+                          <span className="text-[9px]" style={{ color: "hsl(0 0% 55%)" }}>↺ {item.retweets}</span>
+                          <span className="text-[9px]" style={{ color: "hsl(0 0% 55%)" }}>◩ {item.saves}</span>
                         </div>
                       </div>
                     </div>

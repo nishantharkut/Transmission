@@ -349,19 +349,23 @@ export default function SectionDotCom() {
         }
         .dotcom-range-input::-webkit-slider-thumb {
           -webkit-appearance: none;
-          width: 16px;
-          height: 16px;
+          width: 20px;
+          height: 20px;
           border-radius: 0;
           background: hsl(200 90% 55%);
           cursor: pointer;
         }
         .dotcom-range-input::-moz-range-thumb {
-          width: 16px;
-          height: 16px;
+          width: 20px;
+          height: 20px;
           border-radius: 0;
           border: none;
           background: hsl(200 90% 55%);
           cursor: pointer;
+        }
+        @media (max-width: 640px) {
+          .dotcom-range-input::-webkit-slider-thumb { width: 28px; height: 28px; }
+          .dotcom-range-input::-moz-range-thumb { width: 28px; height: 28px; }
         }
       `}</style>
     </section>

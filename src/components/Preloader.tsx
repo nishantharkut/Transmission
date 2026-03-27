@@ -28,6 +28,7 @@ interface PreloaderProps {
 
 export default function Preloader({ onComplete }: PreloaderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const screenRef = useRef<HTMLDivElement>(null);
   const [lines, setLines] = useState<string[]>([]);
   const [progress, setProgress] = useState("");
   const [showPrompt, setShowPrompt] = useState(false);
@@ -74,11 +75,21 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   useEffect(() => {
     if (phase !== "waiting") return;
     const handler = () => {
-      gsap.to(containerRef.current, {
-        opacity: 0,
-        duration: 0.45,
-        onComplete,
-      });
+      window.removeEventListener("keydown", handler);
+      window.removeEventListener("click", handler);
+
+      const tl = gsap.timeline({ onComplete });
+
+      if (screenRef.current) {
+        // Phosphor flare — CRTs briefly brighten on power-off
+        tl.to(screenRef.current, { filter: "brightness(1.8)", duration: 0.07 });
+        // Collapse to horizontal line
+        tl.to(screenRef.current, { scaleY: 0.004, duration: 0.22, ease: "power3.in", filter: "brightness(1.4)" });
+        // Line shrinks to dot
+        tl.to(screenRef.current, { scaleX: 0, opacity: 0, duration: 0.18, ease: "power2.in" });
+      }
+      // Container fades
+      tl.to(containerRef.current, { opacity: 0, duration: 0.2 });
     };
     window.addEventListener("keydown", handler);
     window.addEventListener("click", handler);
@@ -104,7 +115,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             </div>
           </div>
 
-          <div className="preloader-crt-screen">
+          <div className="preloader-crt-screen" ref={screenRef} style={{ transformOrigin: "center center" }}>
             <div className="preloader-crt-scanlines" aria-hidden />
             <div className="preloader-crt-flicker" aria-hidden />
             <div className="preloader-crt-vignette" aria-hidden />
