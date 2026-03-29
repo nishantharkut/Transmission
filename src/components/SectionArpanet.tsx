@@ -19,6 +19,54 @@ const STATS = [
   { num: "1983", label: "year the internet was officially born", stretch: "75%" },
 ];
 
+function ArpanetStat({ num, label, stretch }: { num: string; label: string; stretch: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const el = ref.current;
+    const target = parseInt(num, 10);
+    if (isNaN(target) || target > 100) return;
+
+    const ctx = gsap.context(() => {
+      const counter = { val: 0 };
+      gsap.to(counter, {
+        val: target,
+        duration: 1.0,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 80%",
+          once: true,
+        },
+        onUpdate: () => {
+          el.textContent = Math.round(counter.val).toLocaleString();
+        },
+      });
+    }, el);
+
+    return () => ctx.revert();
+  }, [num]);
+
+  return (
+    <div
+      className="pt-4 mb-7"
+      style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+    >
+      <div
+        ref={ref}
+        className="font-display-era text-[48px] font-extrabold leading-none sm:text-[56px] md:text-[64px] tabular-nums"
+        style={{ color: "hsl(142 90% 60%)", fontStretch: stretch }}
+      >
+        {num}
+      </div>
+      <div className="font-ui-era text-[13px] mt-2" style={{ color: "hsl(142 40% 40%)" }}>
+        {label}
+      </div>
+    </div>
+  );
+}
+
 export default function SectionArpanet() {
   const sectionRef = useRef<HTMLElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -191,21 +239,7 @@ export default function SectionArpanet() {
         {/* Right: Stats */}
         <div className="arpanet-right">
           {STATS.map((stat, i) => (
-            <div
-              key={i}
-              className="pt-4 mb-7"
-              style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
-            >
-              <div
-                className="font-display-era text-[48px] font-extrabold leading-none sm:text-[56px] md:text-[64px]"
-                style={{ color: "hsl(142 90% 60%)", fontStretch: stat.stretch }}
-              >
-                {stat.num}
-              </div>
-              <div className="font-ui-era text-[13px] mt-2" style={{ color: "hsl(142 40% 40%)" }}>
-                {stat.label}
-              </div>
-            </div>
+            <ArpanetStat key={i} num={stat.num} label={stat.label} stretch={stat.stretch} />
           ))}
         </div>
       </div>

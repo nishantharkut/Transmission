@@ -146,6 +146,14 @@
   --signal: var(--era-present-signal);
 }
 
+/* Era-adaptive text selection — judges who highlight text will see the palette respond */
+[data-era="arpanet"] ::selection { background: hsla(142, 90%, 60%, 0.3); color: hsl(142 80% 85%); }
+[data-era="web1"] ::selection { background: hsla(240, 100%, 50%, 0.25); color: hsl(0 0% 10%); }
+[data-era="web2"] ::selection { background: hsla(200, 90%, 55%, 0.3); color: hsl(200 20% 95%); }
+[data-era="mobile"] ::selection { background: hsla(211, 100%, 50%, 0.25); color: hsl(0 0% 10%); }
+[data-era="web3"] ::selection { background: hsla(44, 96%, 56%, 0.3); color: hsl(220 10% 95%); }
+[data-era="present"] ::selection { background: hsla(142, 70%, 55%, 0.3); color: hsl(220 8% 95%); }
+
 @layer base {
   * {
     @apply border-border;

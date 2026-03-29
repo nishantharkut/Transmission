@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { scrambleText } from "@/lib/scrambleText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,7 +56,17 @@ export default function SectionHero() {
       }
     }, sectionRef);
 
-    return () => ctx.revert();
+    const logTitle = sectionRef.current?.querySelector(".hero-log-line") as HTMLElement | null;
+    let scrambleCleanup: { cancel: () => void } | null = null;
+    if (logTitle) {
+      const original = logTitle.textContent || "";
+      scrambleCleanup = scrambleText(logTitle, original, { duration: 1000, delay: 650 });
+    }
+
+    return () => {
+      scrambleCleanup?.cancel();
+      ctx.revert();
+    };
   }, []);
 
   return (

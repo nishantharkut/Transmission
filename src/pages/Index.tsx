@@ -227,7 +227,6 @@ export default function Index() {
         <MemoHero />
         {/* Hero & ARPANET are same color — no gradient needed */}
         <MemoArpanet />
-        <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(120 100% 3%), hsl(40 15% 94%))" }} />
         <MemoWeb1 />
         <div className="relative h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }}>
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">

@@ -25,6 +25,42 @@ const FEED_ITEMS = [
   { name: "Jin Tanaka", handle: "@jint", text: "We don't scroll anymore. The feed scrolls us.", time: "45m", lines: 1, likes: 312, retweets: 67, saves: 9 },
 ];
 
+function MobileStat({ target, suffix, label, decimals = 0 }: { target: number; suffix: string; label: string; decimals?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const el = ref.current;
+    const ctx = gsap.context(() => {
+      const counter = { val: 0 };
+      gsap.to(counter, {
+        val: target,
+        duration: 1.5,
+        ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 80%", once: true },
+        onUpdate: () => {
+          const display = decimals > 0
+            ? counter.val.toFixed(decimals)
+            : Math.round(counter.val).toLocaleString();
+          el.textContent = display + suffix;
+        },
+      });
+    }, el);
+    return () => ctx.revert();
+  }, [target, suffix, decimals]);
+
+  return (
+    <div>
+      <div ref={ref} className="font-mono-era font-bold text-[28px] tabular-nums" style={{ color: "hsl(0 0% 13%)" }}>
+        0{suffix}
+      </div>
+      <div className="font-ui-era text-[11px] mt-1" style={{ color: "hsl(0 0% 55%)" }}>
+        {label}
+      </div>
+    </div>
+  );
+}
+
 export default function SectionMobile() {
   const sectionRef = useRef<HTMLElement>(null);
   const pinnedRef = useRef<HTMLDivElement>(null);
@@ -100,14 +136,8 @@ export default function SectionMobile() {
               By 2020, the average person touched their phone 2,617 times a day. The internet had stopped being a place you visited.
             </p>
             <div className="mt-6 flex flex-wrap gap-8 sm:mt-8 sm:gap-12">
-              <div>
-                <div className="font-mono-era font-bold text-[28px]" style={{ color: "hsl(0 0% 13%)" }}>2,617</div>
-                <div className="font-ui-era text-[11px] mt-1" style={{ color: "hsl(0 0% 55%)" }}>daily touches</div>
-              </div>
-              <div>
-                <div className="font-mono-era font-bold text-[28px]" style={{ color: "hsl(0 0% 13%)" }}>3.5B</div>
-                <div className="font-ui-era text-[11px] mt-1" style={{ color: "hsl(0 0% 55%)" }}>smartphone users</div>
-              </div>
+              <MobileStat target={2617} suffix="" label="daily touches" />
+              <MobileStat target={3.5} suffix="B" label="smartphone users" decimals={1} />
             </div>
           </div>
 
