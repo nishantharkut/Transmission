@@ -294,26 +294,7 @@ const TimelineRail = memo(
         </div>
       </nav>
 
-      {/* Mobile — thin scrub bar + era label bottom-right */}
-        <div
-          className="pointer-events-none fixed left-0 right-0 z-[100] h-0.5 md:hidden"
-        style={{
-            bottom: "env(safe-area-inset-bottom, 0px)",
-          background: TRACK_BASE,
-          opacity: visible ? 1 : 0,
-          transition: "opacity 0.4s ease",
-        }}
-      >
-        <div
-            ref={mobileFillRef}
-          className="h-full origin-left"
-          style={{
-              width: "0%",
-            background: MOBILE_FILL,
-            transition: "width 0.1s linear",
-          }}
-        />
-      </div>
+      {/* Mobile — era label bottom-right */}
       <p
         ref={mobileLabelRef}
         className="font-mono-era fixed right-4 z-[100] text-[9px] md:hidden"
