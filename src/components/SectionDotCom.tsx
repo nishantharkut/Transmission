@@ -217,7 +217,7 @@ export default function SectionDotCom() {
               <button
                 type="button"
                 onClick={dismissSliderHint}
-                className="shrink-0 self-end font-mono-era text-[10px] uppercase tracking-wider sm:self-center"
+                className="shrink-0 self-end font-mono-era text-[10px] uppercase tracking-wider py-2 px-3 -mr-3 sm:self-center"
                 style={{ color: "hsl(200 12% 55%)" }}
               >
                 Dismiss
@@ -237,8 +237,8 @@ export default function SectionDotCom() {
                 <stop offset="0%" stopColor="hsl(200 90% 55%)" stopOpacity="0.28" />
                 <stop offset="100%" stopColor="hsl(200 90% 55%)" stopOpacity="0" />
               </linearGradient>
-              <filter id="dotGlow">
-                <feGaussianBlur stdDeviation="3" result="blur" />
+              <filter id="dotGlow" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -284,7 +284,7 @@ export default function SectionDotCom() {
               value={sliderVal}
               onChange={handleSliderInput}
               onInput={handleSliderInput}
-              className="dotcom-range-input h-1 w-full cursor-pointer appearance-none"
+              className="dotcom-range-input h-1.5 w-full cursor-pointer appearance-none sm:h-1"
               style={{
                 background: `linear-gradient(to right, hsl(200 90% 55%) ${sliderVal}%, hsl(200 10% 25%) ${sliderVal}%)`,
                 borderRadius: 0,
@@ -383,23 +383,24 @@ export default function SectionDotCom() {
         }
         .dotcom-range-input::-webkit-slider-thumb {
           -webkit-appearance: none;
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
           border-radius: 0;
           background: hsl(200 90% 55%);
           cursor: pointer;
+          box-shadow: 0 0 0 10px transparent;
         }
         .dotcom-range-input::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
           border-radius: 0;
           border: none;
           background: hsl(200 90% 55%);
           cursor: pointer;
         }
         @media (max-width: 640px) {
-          .dotcom-range-input::-webkit-slider-thumb { width: 28px; height: 28px; }
-          .dotcom-range-input::-moz-range-thumb { width: 28px; height: 28px; }
+          .dotcom-range-input::-webkit-slider-thumb { width: 32px; height: 32px; }
+          .dotcom-range-input::-moz-range-thumb { width: 32px; height: 32px; }
         }
       `}</style>
     </section>

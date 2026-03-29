@@ -78,7 +78,18 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       window.removeEventListener("keydown", handler);
       window.removeEventListener("click", handler);
 
-      const tl = gsap.timeline({ onComplete });
+      const tl = gsap.timeline({
+        onComplete: () => {
+          onComplete();
+          requestAnimationFrame(() => {
+            const main = document.getElementById("main-content");
+            if (main) {
+              main.setAttribute("tabindex", "-1");
+              (main as HTMLElement).focus({ preventScroll: true });
+            }
+          });
+        },
+      });
 
       if (screenRef.current) {
         // Phosphor flare — CRTs briefly brighten on power-off
@@ -100,7 +111,13 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   }, [phase, onComplete]);
 
   return (
-    <div ref={containerRef} className="preloader-crt-root fixed inset-0 z-[200] flex items-center justify-center">
+    <div
+      ref={containerRef}
+      className="preloader-crt-root fixed inset-0 z-[200] flex items-center justify-center"
+      role="dialog"
+      aria-label="Loading - ARPANET terminal boot sequence"
+      aria-live="polite"
+    >
       <div className="preloader-crt-monitor flex min-w-0 flex-col">
         {/* Plastic CRT bezel + window chrome */}
         <div className="preloader-crt-bezel">

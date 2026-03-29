@@ -42,7 +42,6 @@ export default function SectionMobile() {
           end: () => (window.innerWidth < 768 ? "+=120%" : "+=150%"),
           pin: true,
           scrub: 1,
-          invalidateOnRefresh: true,
           onUpdate: (self) => {
             const progress = self.progress;
             const cards = Math.min(FEED_ITEMS.length, Math.floor(2 + progress * (FEED_ITEMS.length - 1)));
@@ -82,7 +81,7 @@ export default function SectionMobile() {
     <section ref={sectionRef} data-era="mobile">
       <div
         ref={pinnedRef}
-        className="relative flex min-h-dvh items-center"
+        className="relative flex min-h-screen items-center"
         style={{ backgroundColor: "hsl(0 0% 97%)" }}
       >
         <div className="mx-auto grid w-full max-w-[1080px] grid-cols-1 items-center gap-4 px-4 py-4 sm:gap-10 sm:py-8 md:grid-cols-2 md:gap-16 md:py-0 sm:px-6">

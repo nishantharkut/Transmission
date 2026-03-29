@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "@studio-freight/lenis";
 import Preloader from "@/components/Preloader";
-import Navbar from "@/components/Navbar";
-import TimelineRail from "@/components/TimelineRail";
+import Navbar, { type NavbarHandle } from "@/components/Navbar";
+import TimelineRail, { type TimelineRailHandle } from "@/components/TimelineRail";
 import SectionHero from "@/components/SectionHero";
 import SectionArpanet from "@/components/SectionArpanet";
 import SectionWeb1 from "@/components/SectionWeb1";
@@ -105,25 +105,36 @@ function animateEraTransition(eraKey: EraKey) {
   });
 }
 
+const MemoHero = memo(SectionHero);
+const MemoArpanet = memo(SectionArpanet);
+const MemoWeb1 = memo(SectionWeb1);
+const MemoDotCom = memo(SectionDotCom);
+const MemoMobile = memo(SectionMobile);
+const MemoWeb3 = memo(SectionWeb3);
+const MemoNow = memo(SectionNow);
+const MemoClosing = memo(SectionClosing);
+
 export default function Index() {
   const [loaded, setLoaded] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [activeEra, setActiveEra] = useState(0);
   const [showRail, setShowRail] = useState(false);
   const lenisRef = useRef<Lenis | null>(null);
   const disruptionRef = useRef<SignalDisruptionHandle>(null);
+  const navbarRef = useRef<NavbarHandle>(null);
+  const railRef = useRef<TimelineRailHandle>(null);
+  const activeEraRef = useRef(0);
 
   const handlePreloaderComplete = useCallback(() => setLoaded(true), []);
 
   useEffect(() => {
     if (!loaded) return;
 
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: isMobile ? 1.0 : 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      // Let native touch scrolling drive the page on phones (better feel + fewer pin glitches)
-      touchMultiplier: window.matchMedia("(max-width: 767px)").matches ? 1.5 : 1,
+      touchMultiplier: isMobile ? 1.2 : 1,
     });
     lenisRef.current = lenis;
 
@@ -146,7 +157,11 @@ export default function Index() {
     ScrollTrigger.create({
       start: 0,
       end: "max",
-      onUpdate: (self) => setScrollProgress(self.progress),
+      onUpdate: (self) => {
+        const p = self.progress;
+        navbarRef.current?.updateScroll(p);
+        railRef.current?.updateScroll(p);
+      },
     });
 
     ERA_MAP.forEach(({ selector, index, key }) => {
@@ -157,14 +172,20 @@ export default function Index() {
         start: "top 65%",
         end: "bottom 35%",
         onEnter: () => {
-          disruptionRef.current?.fire();
-          setActiveEra(index);
-          animateEraTransition(key);
+          if (activeEraRef.current !== index) {
+            disruptionRef.current?.fire();
+            activeEraRef.current = index;
+            setActiveEra(index);
+            animateEraTransition(key);
+          }
         },
         onEnterBack: () => {
-          disruptionRef.current?.fire();
-          setActiveEra(index);
-          animateEraTransition(key);
+          if (activeEraRef.current !== index) {
+            disruptionRef.current?.fire();
+            activeEraRef.current = index;
+            setActiveEra(index);
+            animateEraTransition(key);
+          }
         },
       });
     });
@@ -200,14 +221,14 @@ export default function Index() {
   return (
     <div className="relative overflow-hidden" style={{ backgroundColor: "hsl(var(--bg))" }}>
       <SignalDisruption ref={disruptionRef} />
-      <Navbar scrollProgress={scrollProgress} activeEra={activeEra} />
-      <TimelineRail activeIndex={activeEra} scrollProgress={scrollProgress} visible={showRail} />
-      <main>
-        <SectionHero />
+      <Navbar ref={navbarRef} activeEra={activeEra} />
+      <TimelineRail ref={railRef} activeIndex={activeEra} visible={showRail} />
+      <main id="main-content">
+        <MemoHero />
         {/* Hero & ARPANET are same color — no gradient needed */}
-        <SectionArpanet />
+        <MemoArpanet />
         <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(120 100% 3%), hsl(40 15% 94%))" }} />
-        <SectionWeb1 />
+        <MemoWeb1 />
         <div className="relative h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }}>
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <div className="text-center">
@@ -218,15 +239,15 @@ export default function Index() {
             </div>
           </div>
         </div>
-        <SectionDotCom />
+        <MemoDotCom />
         <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(215 40% 10%), hsl(0 0% 97%))" }} />
-        <SectionMobile />
+        <MemoMobile />
         <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(0 0% 97%), hsl(252 22% 7%))" }} />
-        <SectionWeb3 />
+        <MemoWeb3 />
         <div className="h-20 sm:h-16" style={{ background: "linear-gradient(to bottom, hsl(252 22% 7%), hsl(220 18% 9%))" }} />
-        <SectionNow />
+        <MemoNow />
         <div className="h-16 sm:h-12" style={{ background: "linear-gradient(to bottom, hsl(220 18% 9%), hsl(220 14% 11%))" }} />
-        <SectionClosing />
+        <MemoClosing />
       </main>
     </div>
   );

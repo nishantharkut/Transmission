@@ -20,7 +20,6 @@ export default function SectionWeb1() {
           end: () => (window.innerWidth < 768 ? "+=190%" : "+=300%"),
           pin: true,
           scrub: 1,
-          invalidateOnRefresh: true,
         },
       });
 
@@ -37,13 +36,13 @@ export default function SectionWeb1() {
     <section ref={sectionRef} data-era="web1">
       <div
         ref={pinnedRef}
-        className="relative min-h-dvh overflow-hidden"
+        className="relative min-h-screen overflow-hidden"
         style={{ backgroundColor: "hsl(40 15% 94%)" }}
       >
         {/* Narrative label — positioned below navbar with solid background for legibility */}
         <div
           className="absolute left-0 z-10 max-w-[min(100vw-2rem,460px)] px-4 sm:px-6 md:px-10"
-          style={{ top: "calc(4.5rem + env(safe-area-inset-top, 0px))" }}
+          style={{ top: "calc(3.5rem + env(safe-area-inset-top, 0px))" }}
         >
           <p
             className="font-serif-era text-[17px] font-light italic leading-[1.45] sm:text-[19px] md:text-[22px] md:leading-[1.5]"
@@ -63,7 +62,7 @@ export default function SectionWeb1() {
         {/* Sub-state A: 1991 first website — actual recreation */}
         <div ref={stateARef} className="absolute inset-0 flex items-center justify-center px-3 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24">
           <div
-            className="flex w-full max-w-[680px] min-h-[520px] flex-col p-4 sm:min-h-[560px] sm:p-8 md:p-12"
+            className="flex w-full max-w-[680px] min-h-[420px] flex-col p-4 sm:min-h-[560px] sm:p-8 md:p-12"
             style={{
               backgroundColor: "hsl(0 0% 96%)",
               border: "1px solid hsl(0 0% 82%)",
@@ -143,7 +142,7 @@ export default function SectionWeb1() {
 
         {/* Sub-state B: Netscape era ~1994 */}
         <div ref={stateBRef} className="absolute inset-0 flex items-center justify-center px-2 pb-8 pt-20 sm:px-6 sm:pb-12 sm:pt-24" style={{ opacity: 0 }}>
-          <div className="flex min-h-[520px] w-full max-w-[680px] min-w-0 flex-col sm:min-h-[560px]">
+          <div className="flex min-h-[420px] w-full max-w-[680px] min-w-0 flex-col sm:min-h-[560px]">
             {/* Window chrome */}
             <div
               className="flex shrink-0 items-center gap-2 px-3 py-2"
@@ -284,7 +283,7 @@ export default function SectionWeb1() {
         {/* Sub-state C: 1999 portal era */}
         <div ref={stateCRef} className="absolute inset-0 flex items-center justify-center px-3 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24" style={{ opacity: 0 }}>
           <div
-            className="flex min-h-[520px] w-full max-w-[680px] min-w-0 flex-col p-4 sm:min-h-[560px] sm:p-8"
+            className="flex min-h-[420px] w-full max-w-[680px] min-w-0 flex-col p-4 sm:min-h-[560px] sm:p-8"
             style={{
               backgroundColor: "hsl(215 50% 12%)",
               border: "1px solid hsl(200 40% 25%)",

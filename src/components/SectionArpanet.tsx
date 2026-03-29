@@ -127,18 +127,18 @@ export default function SectionArpanet() {
             viewBox="0 0 480 250"
             className="w-full max-w-[420px] md:max-w-[460px] lg:max-w-[520px]"
             aria-label="Animated diagram of the original 4-node ARPANET network"
-            style={{ opacity: 0 }}
+            style={{ opacity: 0, contain: "layout style paint" }}
           >
           <defs>
-            <filter id="nodeGlow">
-              <feGaussianBlur stdDeviation="3.5" result="blur" />
+            <filter id="nodeGlow" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
-            <filter id="packetGlow">
-              <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <filter id="packetGlow" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="1.5" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />

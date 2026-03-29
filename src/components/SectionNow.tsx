@@ -48,6 +48,8 @@ export default function SectionNow() {
   const nodesRef = useRef<Node[]>([]);
   const mouseRef = useRef({ x: -100, y: -100 });
   const animFrameRef = useRef<number>(0);
+  const isCanvasVisibleRef = useRef(false);
+  const drawFnRef = useRef<(() => void) | null>(null);
   const [showYou, setShowYou] = useState(false);
   const presentYear = String(new Date().getFullYear());
 
@@ -114,7 +116,8 @@ export default function SectionNow() {
     canvas.width = rect.width * window.devicePixelRatio;
     canvas.height = rect.height * window.devicePixelRatio;
 
-    const nodeCount = Math.min(60, Math.floor(rect.width / 15));
+    const isMobile = rect.width < 640;
+    const nodeCount = Math.min(isMobile ? 30 : 60, Math.floor(rect.width / (isMobile ? 18 : 15)));
     nodesRef.current = Array.from({ length: nodeCount }, () => ({
       x: Math.random() * rect.width,
       y: Math.random() * rect.height,
@@ -127,6 +130,7 @@ export default function SectionNow() {
     const dpr = window.devicePixelRatio;
 
     const draw = () => {
+      if (!isCanvasVisibleRef.current) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.scale(dpr, dpr);
       const nodes = nodesRef.current;
@@ -139,7 +143,7 @@ export default function SectionNow() {
         if (n.y < 0 || n.y > rect.height) n.vy *= -1;
       });
 
-      const maxDist = 118;
+      const maxDist = rect.width < 640 ? 90 : 118;
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const dx = nodes[i].x - nodes[j].x;
@@ -206,6 +210,7 @@ export default function SectionNow() {
       animFrameRef.current = requestAnimationFrame(draw);
     };
 
+    drawFnRef.current = draw;
     draw();
   }, []);
 
@@ -213,11 +218,19 @@ export default function SectionNow() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    let initialized = false;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
+        const wasVisible = isCanvasVisibleRef.current;
+        isCanvasVisibleRef.current = entry.isIntersecting;
         if (entry.isIntersecting) {
-          initCanvas();
-          observer.disconnect();
+          if (!initialized) {
+            initialized = true;
+            initCanvas();
+          } else if (!wasVisible && drawFnRef.current) {
+            drawFnRef.current();
+          }
         }
       },
       { threshold: 0.1 }
@@ -386,15 +399,16 @@ export default function SectionNow() {
       {/* Canvas network */}
       <div className="mt-6 px-4 sm:mt-10 sm:px-6">
         <p
-          className="mb-3 text-center font-mono-era text-[8px] tracking-[2px] sm:mb-4 sm:text-[9px]"
+          className="mb-3 text-center font-mono-era text-[10px] tracking-[2px] sm:mb-4 sm:text-[10px]"
           style={{ color: "hsl(220 8% 35%)" }}
         >
           <span className="hidden sm:inline">MOVE YOUR CURSOR TO JOIN THE NETWORK</span>
-          <span className="sm:hidden">TAP AND DRAG TO JOIN THE NETWORK</span>
+          <span className="sm:hidden">TOUCH TO JOIN THE NETWORK</span>
         </p>
         <canvas
           ref={canvasRef}
-          className="h-[min(55vh,360px)] w-full touch-none sm:h-[min(55vh,380px)] md:h-[60vh]"
+          className="h-[min(55vh,360px)] w-full sm:h-[min(55vh,380px)] md:h-[60vh]"
+          style={{ touchAction: "pan-y" }}
           aria-label="Interactive network visualization. Move your finger or cursor to become a node in the network."
           role="img"
         />

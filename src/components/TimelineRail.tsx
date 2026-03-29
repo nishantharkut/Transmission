@@ -1,5 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useImperativeHandle, forwardRef, memo } from "react";
 import gsap from "gsap";
+
+export interface TimelineRailHandle {
+  updateScroll: (progress: number) => void;
+}
 
 /** Live “frequency” per era — node, bar, [RECV], track gradient, active labels */
 const ERA_LIVE_HSL: { h: number; s: number; l: number }[] = [
@@ -48,56 +52,76 @@ const MOBILE_FILL = "hsl(142 70% 55%)";
 
 interface TimelineRailProps {
   activeIndex: number;
-  scrollProgress: number;
   visible?: boolean;
 }
 
-export default function TimelineRail({ activeIndex, scrollProgress, visible = true }: TimelineRailProps) {
-  const presentYear = String(new Date().getFullYear());
-  const recvCursorRef = useRef<HTMLSpanElement>(null);
-  const mobileLabelRef = useRef<HTMLParagraphElement>(null);
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+const TimelineRail = memo(
+  forwardRef<TimelineRailHandle, TimelineRailProps>(function TimelineRail(
+    { activeIndex, visible = true },
+    ref
+  ) {
+    const presentYear = String(new Date().getFullYear());
+    const recvCursorRef = useRef<HTMLSpanElement>(null);
+    const mobileLabelRef = useRef<HTMLParagraphElement>(null);
+    const desktopFillRef = useRef<HTMLDivElement>(null);
+    const mobileFillRef = useRef<HTMLDivElement>(null);
+    const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
-  const live = ERA_LIVE_HSL[activeIndex] ?? ERA_LIVE_HSL[0];
-  const liveCss = hslStr(live);
-  const liveGlow = `0 0 0 3px ${hsla(live, 0.12)}, 0 0 12px ${hsla(live, 0.24)}`;
-  const livePanel = hsla(live, 0.06);
+    const live = ERA_LIVE_HSL[activeIndex] ?? ERA_LIVE_HSL[0];
+    const liveCss = hslStr(live);
+    const liveGlow = `0 0 0 3px ${hsla(live, 0.12)}, 0 0 12px ${hsla(live, 0.24)}`;
+    const livePanel = hsla(live, 0.06);
 
-  const activeEra = ERAS[activeIndex] ?? ERAS[0];
-  const activeYear = activeIndex === ERAS.length - 1 ? presentYear : activeEra.year;
-  const mobileLabelText = `${activeYear} · ${activeEra.label}`;
+    const activeEra = ERAS[activeIndex] ?? ERAS[0];
+    const activeYear = activeIndex === ERAS.length - 1 ? presentYear : activeEra.year;
+    const mobileLabelText = `${activeYear} · ${activeEra.label}`;
 
-  const scrollToEra = (eraKey: string) => {
-    const sections = document.querySelectorAll(`[data-era='${eraKey}']`);
-    const target = eraKey === "arpanet" && sections.length > 1 ? sections[1] : sections[0];
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
+    useImperativeHandle(
+      ref,
+      () => ({
+        updateScroll: (progress: number) => {
+          if (desktopFillRef.current) {
+            desktopFillRef.current.style.height = `calc((100% - 1rem) * ${progress})`;
+          }
+          if (mobileFillRef.current) {
+            mobileFillRef.current.style.width = `${progress * 100}%`;
+          }
+        },
+      }),
+      []
+    );
 
-  useEffect(() => {
-    const el = recvCursorRef.current;
-    if (!el) return;
-    const tween = gsap.to(el, {
-      opacity: 0,
-      repeat: -1,
-      yoyo: true,
-      duration: 0.5,
-      ease: "power1.inOut",
-    });
-    return () => {
-      tween.kill();
+    const scrollToEra = (eraKey: string) => {
+      const sections = document.querySelectorAll(`[data-era='${eraKey}']`);
+      const target = eraKey === "arpanet" && sections.length > 1 ? sections[1] : sections[0];
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     };
-  }, [activeIndex]);
 
-  useEffect(() => {
-    const el = mobileLabelRef.current;
-    if (!el || !visible) return;
-    gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-  }, [activeIndex, visible]);
+    useEffect(() => {
+      const el = recvCursorRef.current;
+      if (!el) return;
+      const tween = gsap.to(el, {
+        opacity: 0,
+        repeat: -1,
+        yoyo: true,
+        duration: 0.5,
+        ease: "power1.inOut",
+      });
+      return () => {
+        tween.kill();
+      };
+    }, [activeIndex]);
 
-  return (
-    <>
+    useEffect(() => {
+      const el = mobileLabelRef.current;
+      if (!el || !visible) return;
+      gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    }, [activeIndex, visible]);
+
+    return (
+      <>
       {/* Desktop — frequency scanner */}
       <nav
         className="pointer-events-auto fixed left-5 top-1/2 z-50 hidden w-[124px] -translate-y-1/2 flex-col md:flex"
@@ -110,10 +134,11 @@ export default function TimelineRail({ activeIndex, scrollProgress, visible = tr
             className="pointer-events-none absolute bottom-2 left-[10px] top-2 z-0 w-px"
             style={{ background: TRACK_BASE }}
           />
-          <div
+            <div
+              ref={desktopFillRef}
             className="pointer-events-none absolute left-[10px] top-2 z-0 w-px overflow-hidden"
             style={{
-              height: `calc((100% - 1rem) * ${scrollProgress})`,
+                height: "0%",
               background: eraFillGradient(live),
               transition: "height 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.8s ease",
             }}
@@ -174,7 +199,15 @@ export default function TimelineRail({ activeIndex, scrollProgress, visible = tr
               return (
                 <li
                   key={key}
-                  className="relative flex cursor-pointer items-center rounded-[10px] py-[8px]"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      scrollToEra(era.era);
+                    }
+                  }}
+                  className="relative flex cursor-pointer items-center rounded-[10px] py-[8px] outline-none focus-visible:ring-1 focus-visible:ring-[hsl(142_70%_55%)]"
                   style={{
                     paddingLeft: 20,
                     background: isActive ? livePanel : hovered ? "hsla(220, 10%, 100%, 0.02)" : "transparent",
@@ -262,18 +295,20 @@ export default function TimelineRail({ activeIndex, scrollProgress, visible = tr
       </nav>
 
       {/* Mobile — thin scrub bar + era label bottom-right */}
-      <div
-        className="pointer-events-none fixed bottom-0 left-0 right-0 z-[100] h-0.5 md:hidden"
+        <div
+          className="pointer-events-none fixed left-0 right-0 z-[100] h-0.5 md:hidden"
         style={{
+            bottom: "env(safe-area-inset-bottom, 0px)",
           background: TRACK_BASE,
           opacity: visible ? 1 : 0,
           transition: "opacity 0.4s ease",
         }}
       >
         <div
+            ref={mobileFillRef}
           className="h-full origin-left"
           style={{
-            width: `${scrollProgress * 100}%`,
+              width: "0%",
             background: MOBILE_FILL,
             transition: "width 0.1s linear",
           }}
@@ -291,6 +326,10 @@ export default function TimelineRail({ activeIndex, scrollProgress, visible = tr
       >
         {mobileLabelText}
       </p>
-    </>
-  );
-}
+      </>
+    );
+  })
+);
+
+TimelineRail.displayName = "TimelineRail";
+export default TimelineRail;

@@ -62,13 +62,13 @@ export default function SectionHero() {
     <section
       ref={sectionRef}
       data-era="arpanet"
-      className="relative flex min-h-dvh w-full max-w-[100%] flex-col items-center justify-center overflow-hidden px-4 sm:px-6"
+      className="relative flex min-h-screen w-full max-w-[100%] flex-col items-center justify-center overflow-hidden px-4 sm:px-6"
       style={{ backgroundColor: "hsl(120 100% 3%)" }}
     >
       {/* ASCII network background — clip + min-w-0 prevents horizontal page scroll on narrow viewports */}
       <pre
         ref={asciiRef}
-        className="pointer-events-none absolute inset-0 min-w-0 overflow-hidden font-mono-era text-[6px] leading-[1.65] selection-none sm:text-[8px] md:text-[10px] md:leading-[1.8]"
+        className="pointer-events-none absolute inset-0 min-w-0 overflow-hidden font-mono-era text-[8px] leading-[1.65] selection-none sm:text-[9px] md:text-[10px] md:leading-[1.8]"
         style={{
           color: "hsl(142 45% 62%)",
           opacity: 0.28,
@@ -87,6 +87,7 @@ export default function SectionHero() {
       </pre>
 
       {/* Transmission log */}
+      <h1 className="sr-only">TRANSMISSION - 60 Years of Internet History</h1>
       <div
         className="relative z-10 mx-auto w-full min-w-0 max-w-[min(100%,480px)] overflow-hidden text-center font-mono-era text-[11px] leading-[1.85] sm:text-[12px] sm:leading-[2] md:text-[13px]"
         style={{ color: "hsl(142 80% 72%)" }}
@@ -159,7 +160,7 @@ export default function SectionHero() {
       {/* Scroll indicator */}
       <div className="hero-scroll-indicator absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] flex flex-col items-center gap-2 px-2 sm:bottom-8">
         <span
-          className="font-mono-era max-w-[16rem] text-center text-[7px] sm:max-w-none sm:text-[9px]"
+          className="font-mono-era max-w-[16rem] text-center text-[9px] sm:max-w-none sm:text-[10px]"
           style={{ letterSpacing: "clamp(1px, 0.6vw, 3px)", color: "hsl(142 30% 20%)" }}
         >
           SCROLL TO ADVANCE TRANSMISSION
