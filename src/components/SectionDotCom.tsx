@@ -145,7 +145,7 @@ export default function SectionDotCom() {
           </div>
           <div className="dotcom-ticker-fade relative min-h-0 min-w-0 flex-1">
             <div className="dotcom-ticker-track dotcom-ticker-anim flex h-full w-max items-center will-change-transform">
-              {[0, 1, 2].map((loop) => (
+              {(typeof window !== "undefined" && window.innerWidth < 768 ? [0, 1] : [0, 1, 2]).map((loop) => (
                 <div key={loop} className="flex items-center pr-6 sm:pr-10">
                   {TICKER_QUOTES.map((q) => {
                     const up = q.dir === "up";
@@ -324,7 +324,13 @@ export default function SectionDotCom() {
       <style>{`
         @keyframes dotcom-marquee {
           0% { transform: translate3d(0, 0, 0); }
-          100% { transform: translate3d(-33.3333333333%, 0, 0); }
+          100% { transform: translate3d(-33.3333%, 0, 0); }
+        }
+        @media (max-width: 767px) {
+          @keyframes dotcom-marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+          }
         }
         .dotcom-ticker-fade {
           -webkit-mask-image: linear-gradient(

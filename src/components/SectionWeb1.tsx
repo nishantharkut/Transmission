@@ -13,13 +13,15 @@ export default function SectionWeb1() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      const isMobile = window.innerWidth < 768;
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pinnedRef.current,
           start: "top top",
-          end: () => (window.innerWidth < 768 ? "+=190%" : "+=300%"),
+          end: () => (isMobile ? "+=190%" : "+=300%"),
           pin: true,
-          scrub: 1,
+          scrub: isMobile ? 0.5 : 1,
+          anticipatePin: isMobile ? 1 : 0,
         },
       });
 

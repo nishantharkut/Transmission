@@ -66,22 +66,27 @@ export default function SectionMobile() {
   const pinnedRef = useRef<HTMLDivElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
   const feedContainerRef = useRef<HTMLDivElement>(null);
+  const prevCardsRef = useRef(2);
   const [showBadges, setShowBadges] = useState(false);
   const [visibleCards, setVisibleCards] = useState(2);
 
   useEffect(() => {
+    const isMobile = window.innerWidth < 768;
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pinnedRef.current,
           start: "top top",
-          end: () => (window.innerWidth < 768 ? "+=120%" : "+=150%"),
+          end: () => (isMobile ? "+=120%" : "+=150%"),
           pin: true,
-          scrub: 1,
+          scrub: isMobile ? 0.5 : 1,
+          anticipatePin: isMobile ? 1 : 0,
           onUpdate: (self) => {
-            const progress = self.progress;
-            const cards = Math.min(FEED_ITEMS.length, Math.floor(2 + progress * (FEED_ITEMS.length - 1)));
-            setVisibleCards(cards);
+            const cards = Math.min(FEED_ITEMS.length, Math.floor(2 + self.progress * (FEED_ITEMS.length - 1)));
+            if (cards !== prevCardsRef.current) {
+              prevCardsRef.current = cards;
+              setVisibleCards(cards);
+            }
           },
         },
       });
@@ -96,8 +101,9 @@ export default function SectionMobile() {
       const scrollAmount = (visibleCards - 2) * 68;
       gsap.to(feedContainerRef.current, {
         y: -scrollAmount,
-        duration: 0.4,
+        duration: 0.3,
         ease: "power2.out",
+        overwrite: true,
       });
     }
   }, [visibleCards]);
@@ -157,7 +163,7 @@ export default function SectionMobile() {
                 {/* Outer body with subtle shadow */}
                 <defs>
                   <filter id="phoneShadow" x="-10%" y="-5%" width="120%" height="110%">
-                    <feDropShadow dx="0" dy="4" stdDeviation="12" floodColor="hsl(0 0% 0%)" floodOpacity="0.08" />
+                    <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="hsl(0 0% 0%)" floodOpacity="0.06" />
                   </filter>
                 </defs>
                 <rect x="1" y="1" width="258" height="538" rx="40" fill="hsl(0 0% 98%)" stroke="hsl(0 0% 82%)" strokeWidth="1.5" filter="url(#phoneShadow)" />
