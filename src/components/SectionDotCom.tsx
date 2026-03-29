@@ -118,12 +118,11 @@ export default function SectionDotCom() {
     >
       {/* Ticker tape — same palette + typography as web2 section (no broadcast red / harsh black) */}
       <div
-        className="pointer-events-none absolute left-0 right-0 top-0 z-[1] border-b overflow-hidden dotcom-ticker-bar"
+        className="pointer-events-none absolute left-0 right-0 top-0 z-[1] overflow-hidden dotcom-ticker-bar"
         style={{
           borderColor: "hsla(200, 90%, 55%, 0.1)",
           background:
             "linear-gradient(180deg, hsl(215 38% 9%) 0%, hsl(215 42% 7.5%) 100%)",
-          boxShadow: "inset 0 1px 0 hsla(200, 25%, 100%, 0.04)",
         }}
         aria-hidden="true"
       >

@@ -104,6 +104,17 @@ function animateEraTransition(eraKey: EraKey) {
   });
 }
 
+function applyEraPaletteInstant(eraKey: EraKey) {
+  const colors = readEraPaletteFromCss(eraKey);
+  const root = document.documentElement;
+  root.style.setProperty("--bg", colors.bg);
+  root.style.setProperty("--text", colors.text);
+  root.style.setProperty("--text-dim", colors.textDim);
+  root.style.setProperty("--text-ghost", colors.textGhost);
+  root.style.setProperty("--accent", colors.accent);
+  root.style.setProperty("--signal", colors.signal);
+}
+
 const MemoHero = memo(SectionHero);
 const MemoArpanet = memo(SectionArpanet);
 const MemoWeb1 = memo(SectionWeb1);
@@ -151,6 +162,11 @@ export default function Index() {
 
   useEffect(() => {
     if (!loaded) return;
+
+    // Ensure initial viewport palette matches the first era before ScrollTrigger callbacks run.
+    applyEraPaletteInstant("arpanet");
+    activeEraRef.current = 0;
+    setActiveEra(0);
 
     ScrollTrigger.create({
       start: 0,
@@ -222,7 +238,7 @@ export default function Index() {
         <MemoHero />
         {/* Hero & ARPANET are same color — no gradient needed */}
         <MemoArpanet />
-        <div className="relative h-32 sm:h-24" style={{ background: "linear-gradient(to bottom, hsl(120 100% 3%), hsl(40 15% 94%))" }}>
+        <div className="relative -mb-px -mt-px h-32 sm:h-24 md:hidden" style={{ background: "linear-gradient(to bottom, hsl(120 100% 3%), hsl(40 15% 94%))" }}>
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <span className="font-mono-era text-[7px] font-medium tracking-[3px] sm:text-[8px]" style={{ color: "hsla(142, 60%, 50%, 0.35)" }}>
               ── FREQUENCY SHIFT ──
@@ -230,10 +246,10 @@ export default function Index() {
           </div>
         </div>
         <MemoWeb1 />
-        <div className="relative h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }}>
+        <div className="relative -mb-px -mt-px hidden md:block md:h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }}>
         </div>
         <MemoDotCom />
-        <div className="relative h-32 sm:h-24" style={{ background: "linear-gradient(to bottom, hsl(215 40% 10%), hsl(0 0% 97%))" }}>
+        <div className="relative -mb-px -mt-px h-32 sm:h-24" style={{ background: "linear-gradient(to bottom, hsl(215 40% 10%), hsl(0 0% 97%))" }}>
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <span className="font-mono-era text-[7px] font-medium tracking-[3px] sm:text-[8px]" style={{ color: "hsla(200, 50%, 55%, 0.3)" }}>
               ── SIGNAL REACQUIRED ──
@@ -241,7 +257,7 @@ export default function Index() {
           </div>
         </div>
         <MemoMobile />
-        <div className="relative h-40 sm:h-28" style={{ background: "linear-gradient(to bottom, hsl(0 0% 97%) 0%, hsl(0 0% 70%) 35%, hsl(252 15% 20%) 65%, hsl(252 22% 7%) 100%)" }}>
+        <div className="relative -mb-px -mt-px h-40 sm:h-28" style={{ background: "linear-gradient(to bottom, hsl(0 0% 97%) 0%, hsl(0 0% 70%) 35%, hsl(252 15% 20%) 65%, hsl(252 22% 7%) 100%)" }}>
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <div className="text-center">
               <span className="font-mono-era block text-[7px] font-medium tracking-[3px] sm:text-[8px]" style={{ color: "hsla(0, 0%, 50%, 0.5)" }}>
@@ -251,7 +267,7 @@ export default function Index() {
           </div>
         </div>
         <MemoWeb3 />
-        <div className="relative h-20 sm:h-16" style={{ background: "linear-gradient(to bottom, hsl(252 22% 7%), hsl(220 18% 9%))" }}>
+        <div className="relative -mb-px -mt-px h-20 sm:h-16" style={{ background: "linear-gradient(to bottom, hsl(252 22% 7%), hsl(220 18% 9%))" }}>
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <span className="font-mono-era text-[7px] font-medium tracking-[3px] sm:text-[8px]" style={{ color: "hsla(220, 15%, 40%, 0.3)" }}>
               ── CONVERGING ──
@@ -259,7 +275,7 @@ export default function Index() {
           </div>
         </div>
         <MemoNow />
-        <div className="h-16 sm:h-12" style={{ background: "linear-gradient(to bottom, hsl(220 18% 9%), hsl(220 14% 11%))" }} />
+        <div className="-mb-px -mt-px h-16 sm:h-12" style={{ background: "linear-gradient(to bottom, hsl(220 18% 9%), hsl(220 14% 11%))" }} />
         <MemoClosing />
       </main>
     </div>
