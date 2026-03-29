@@ -79,7 +79,7 @@ export default function SectionHero() {
       {/* ASCII network background — clip + min-w-0 prevents horizontal page scroll on narrow viewports */}
       <pre
         ref={asciiRef}
-        className="pointer-events-none absolute inset-0 min-w-0 overflow-hidden font-mono-era text-[8px] leading-[1.65] selection-none sm:text-[9px] md:text-[10px] md:leading-[1.8]"
+        className="pointer-events-none absolute inset-0 min-w-0 overflow-hidden font-mono-era text-[8px] leading-[1.65] select-none sm:text-[9px] md:text-[10px] md:leading-[1.8]"
         style={{
           color: "hsl(142 45% 62%)",
           opacity: 0.28,

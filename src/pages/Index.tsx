@@ -246,7 +246,15 @@ export default function Index() {
           </div>
         </div>
         <MemoWeb1 />
-        <div className="relative -mb-px -mt-px hidden md:block md:h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }}>
+        <div className="relative -mb-px -mt-px h-32 sm:h-24 md:h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }}>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <span className="font-mono-era block text-[7px] font-bold tracking-[3px] sm:text-[8px]" style={{ color: "hsl(0 0% 8%)" }}>
+                TRANSMISSION CONTINUES
+              </span>
+              <span className="preloader-cursor mt-1 block text-[10px]" style={{ color: "hsl(0 0% 8%)" }}>▼</span>
+            </div>
+          </div>
         </div>
         <MemoDotCom />
         <div className="relative -mb-px -mt-px h-32 sm:h-24" style={{ background: "linear-gradient(to bottom, hsl(215 40% 10%), hsl(0 0% 97%))" }}>
