@@ -13,7 +13,6 @@ import SectionMobile from "@/components/SectionMobile";
 import SectionWeb3 from "@/components/SectionWeb3";
 import SectionNow from "@/components/SectionNow";
 import SectionClosing from "@/components/SectionClosing";
-import SignalDisruption, { type SignalDisruptionHandle } from "@/components/SignalDisruption";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -119,7 +118,6 @@ export default function Index() {
   const [activeEra, setActiveEra] = useState(0);
   const [showRail, setShowRail] = useState(false);
   const lenisRef = useRef<Lenis | null>(null);
-  const disruptionRef = useRef<SignalDisruptionHandle>(null);
   const navbarRef = useRef<NavbarHandle>(null);
   const railRef = useRef<TimelineRailHandle>(null);
   const activeEraRef = useRef(0);
@@ -173,7 +171,6 @@ export default function Index() {
         end: "bottom 35%",
         onEnter: () => {
           if (activeEraRef.current !== index) {
-            disruptionRef.current?.fire();
             activeEraRef.current = index;
             setActiveEra(index);
             animateEraTransition(key);
@@ -181,7 +178,6 @@ export default function Index() {
         },
         onEnterBack: () => {
           if (activeEraRef.current !== index) {
-            disruptionRef.current?.fire();
             activeEraRef.current = index;
             setActiveEra(index);
             animateEraTransition(key);
@@ -220,30 +216,48 @@ export default function Index() {
 
   return (
     <div className="relative overflow-hidden" style={{ backgroundColor: "hsl(var(--bg))" }}>
-      <SignalDisruption ref={disruptionRef} />
       <Navbar ref={navbarRef} activeEra={activeEra} />
       <TimelineRail ref={railRef} activeIndex={activeEra} visible={showRail} />
       <main id="main-content">
         <MemoHero />
         {/* Hero & ARPANET are same color — no gradient needed */}
         <MemoArpanet />
+        <div className="relative h-32 sm:h-24" style={{ background: "linear-gradient(to bottom, hsl(120 100% 3%), hsl(40 15% 94%))" }}>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <span className="font-mono-era text-[7px] font-medium tracking-[3px] sm:text-[8px]" style={{ color: "hsla(142, 60%, 50%, 0.35)" }}>
+              ── FREQUENCY SHIFT ──
+            </span>
+          </div>
+        </div>
         <MemoWeb1 />
         <div className="relative h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(40 15% 94%), hsl(215 40% 10%))" }}>
+        </div>
+        <MemoDotCom />
+        <div className="relative h-32 sm:h-24" style={{ background: "linear-gradient(to bottom, hsl(215 40% 10%), hsl(0 0% 97%))" }}>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <span className="font-mono-era text-[7px] font-medium tracking-[3px] sm:text-[8px]" style={{ color: "hsla(200, 50%, 55%, 0.3)" }}>
+              ── SIGNAL REACQUIRED ──
+            </span>
+          </div>
+        </div>
+        <MemoMobile />
+        <div className="relative h-40 sm:h-28" style={{ background: "linear-gradient(to bottom, hsl(0 0% 97%) 0%, hsl(0 0% 70%) 35%, hsl(252 15% 20%) 65%, hsl(252 22% 7%) 100%)" }}>
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <span className="font-mono-era block text-[7px] font-bold tracking-[3px] sm:text-[8px]" style={{ color: "hsl(0 0% 8%)" }}>
-                TRANSMISSION CONTINUES
+              <span className="font-mono-era block text-[7px] font-medium tracking-[3px] sm:text-[8px]" style={{ color: "hsla(0, 0%, 50%, 0.5)" }}>
+                ── DECENTRALIZING ──
               </span>
-              <span className="preloader-cursor mt-1 block text-[10px]" style={{ color: "hsl(0 0% 8%)" }}>▼</span>
             </div>
           </div>
         </div>
-        <MemoDotCom />
-        <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(215 40% 10%), hsl(0 0% 97%))" }} />
-        <MemoMobile />
-        <div className="h-28 sm:h-20" style={{ background: "linear-gradient(to bottom, hsl(0 0% 97%), hsl(252 22% 7%))" }} />
         <MemoWeb3 />
-        <div className="h-20 sm:h-16" style={{ background: "linear-gradient(to bottom, hsl(252 22% 7%), hsl(220 18% 9%))" }} />
+        <div className="relative h-20 sm:h-16" style={{ background: "linear-gradient(to bottom, hsl(252 22% 7%), hsl(220 18% 9%))" }}>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <span className="font-mono-era text-[7px] font-medium tracking-[3px] sm:text-[8px]" style={{ color: "hsla(220, 15%, 40%, 0.3)" }}>
+              ── CONVERGING ──
+            </span>
+          </div>
+        </div>
         <MemoNow />
         <div className="h-16 sm:h-12" style={{ background: "linear-gradient(to bottom, hsl(220 18% 9%), hsl(220 14% 11%))" }} />
         <MemoClosing />

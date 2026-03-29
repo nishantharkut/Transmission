@@ -59,6 +59,18 @@ export default function SectionWeb1() {
           </span>
         </div>
 
+        {/* Mobile transmission marker shown through the ending phase of WWW */}
+        <div
+          className="pointer-events-none absolute left-1/2 z-20 w-[calc(100%-2rem)] max-w-[360px] -translate-x-1/2 text-center md:hidden"
+          style={{ bottom: "max(3rem, calc(env(safe-area-inset-bottom, 0px) + 2rem))", opacity: 1 }}
+          aria-hidden="true"
+        >
+          <span className="font-mono-era block text-[9px] font-semibold tracking-[2.6px]" style={{ color: "hsl(0 0% 22%)" }}>
+            TRANSMISSION CONTINUES
+          </span>
+          <span className="preloader-cursor mt-1 block text-[10px]" style={{ color: "hsl(0 0% 28%)" }}>▼</span>
+        </div>
+
         {/* Sub-state A: 1991 first website — actual recreation */}
         <div ref={stateARef} className="absolute inset-0 flex items-center justify-center px-3 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24">
           <div
